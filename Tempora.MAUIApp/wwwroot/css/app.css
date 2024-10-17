@@ -204,6 +204,7 @@ h1:focus {
     appearance: none;
     -webkit-appearance: none; 
     -moz-appearance: none; 
+    background:var(--white);
 }
 
 /*buttons*/
@@ -225,6 +226,7 @@ h1:focus {
     padding: 16px;
     border: solid 1px var(--ligthgray);
     border-radius: 8px;
+    background:var(--white);
 }
 
 /*Card*/
@@ -232,6 +234,46 @@ h1:focus {
 .card-period{
     padding:24px;
     background-color:var(--pink);
+    border-radius:24px;
+    z-index:100;
 }
 
+
+.bton-card {
+    background: var(--white);
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    z-index: 200;
+}
   
+
+.status{
+    padding:8px;
+    color:var(--black);
+    border-radius:25px;
+    background:var(--white);
+}
+
+progress {
+    -webkit-appearance: none; 
+    appearance: none;
+    width: 100%;
+    height: 8px;
+}
+
+    progress::-webkit-progress-bar {
+        background-color: #e0e0e0; 
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    progress::-webkit-progress-value {
+        background-color: #000000; 
+        border-radius: 15px 0 0 15px;
+    }
+
+    progress::-moz-progress-bar {
+        background-color: #000000; 
+        border-radius: 15px;
+    }

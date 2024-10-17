@@ -1,0 +1,98 @@
+﻿@page "/editperiod"
+@inject NavigationManager navManager
+
+<main style="gap:24px; display:flex; flex-direction:column; height:100vh;">
+
+    <section class="mt-4" style="gap:16px; display:flex; align-items:center; justify-content:space-between;">
+
+        <button @onclick="Regresar" class="btn-goback"> <img src="/Images/back.svg" alt="Alternate Text" /> </button>
+        
+        <div>
+            <h1 class="t20">Editar periodo</h1>
+        </div>
+        <button data-bs-target="#exampleModalToggle" data-bs-toggle="modal" class="btn-goback"> <img src="/Images/delete.svg" alt="Alternate Text" /> </button>
+
+
+    </section>
+
+    <section class="grid">
+        <h1 class="t16">Detalles</h1>
+    </section>
+
+    <section class="grid" style="gap:44px;">
+        <section class="grid" style="gap:24px;">
+
+            <div class="grid" style="gap:10px;">
+                <label>Nombre del nuevo periodo</label>
+                <div class="inp-cont">
+                    <img class="ico-inp left" src="/Images/add.svg" alt="Alternate Text" />
+                    <input placeholder="Ingresa el nombre" class="inp parr" type="text" name="name" value="" />
+                </div>
+            </div>
+
+            <div class="grid" style="gap:10px;">
+                <label>Cantidad de horas</label>
+                <div class="inp-cont">
+                    <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                    <input placeholder="Ingresa la cantidad de horas" class="inp parr" type="number" name="name" value="" />
+                </div>
+            </div>
+
+            <div class="grid" style="gap:10px;">
+                <label>Fecha de inicio</label>
+                <div class="inp-cont">
+                    <img class="ico-inp left" src="/Images/date.svg" alt="Alternate Text" />
+                    <input placeholder="Ingresa la cantidad de horas" class="inp parr" type="date" name="name" value="" />
+                </div>
+            </div>
+
+        </section>
+
+    </section>
+
+</main>
+
+<button @onclick="Regresar" style="position: fixed; bottom: 24px; left: 24px; right: 24px; width: calc(100% - 48px);" class="bton btn-black" type="submit">Guardar nuevo periodo</button>
+
+
+<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Modal 1</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Show a second modal and hide this one with the button below.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Open second modal</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Modal 2</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Hide this modal and show the first with the button below.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Back to first</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    private void Regresar()
+    {
+        navManager.NavigateTo("/home");
+    }
+}

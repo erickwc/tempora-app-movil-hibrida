@@ -36,25 +36,32 @@
     </section>
     <section>
 
-        <section class="card-period">
-            <div>
-                <p>Pendiente</p>
-                <img src="/Images/setting.svg" alt="Alternate Text" />
+       
+        <section class="card-period grid" style="gap:42px;">
+            <div class="d-flex justify-content-between align-items-center">
+                <p class="status">Pendiente</p>
+                <span @onclick="EditarPeriodo" class="bton-card"><img src="/Images/setting.svg" alt="Alternate Text" /></span>
             </div>
-            <div>
-                <h3 class="t16">Título</h3>
+            <div class="grid" style="gap:16px;">
+                <div class="grid" style="gap:8px;">
+                <h3 class="t16">Servicio Social ESFE</h3>
                 <p class="parr">Fecha</p>
             </div>
-            <section>
-                <p class="parr">0 horas restantes</p>
+            <div>
+                <p style="text-align:end;" class="parr">0 horas restantes</p>
                 <progress value="30" max="100"></progress>
-            </section>
+            </div>
+            </div>
         </section>
+      
+       
 
 
     </section>
-    
-   
+
+    <button @onclick="NuevoPeriodo" style="position: fixed; bottom: 24px; left: 24px; right: 24px; width: calc(100% - 48px);" class="bton btn-black" type="submit">Nuevo periodo</button>
+
+
 
 </main>
 
@@ -83,5 +90,15 @@
 
         // Formato de "10 de octubre - 9:30 am"
         fechaHoraActual = ahora.ToString("d 'de' MMMM - h:mm tt", new System.Globalization.CultureInfo("es-ES"));
+    }
+
+    private void EditarPeriodo()
+    {
+        navManager.NavigateTo("/editperiod");
+    }
+
+    private void NuevoPeriodo()
+    {
+        navManager.NavigateTo("/newperiod");
     }
 }
