@@ -1,0 +1,87 @@
+﻿@page "/home"
+@inject NavigationManager navManager
+
+<main style="gap:24px; display:flex; flex-direction:column; height:100vh;">
+
+   
+    <section class="mt-4" style="gap:16px; display:flex; justify-content:space-between; align-items:center;">
+        @* <div>
+            <img class="img-perfil" src="/Images/setting.svg" alt="Alternate Text" />
+        </div> *@
+        <div>
+            <h1 class="t16">Erick Caceres</h1>
+            <p class="parr">@fechaHoraActual</p>
+        </div>
+        <div>
+            <button class="btn-goback"> <img src="/Images/setting.svg" alt="Alternate Text" /> </button>
+        </div>
+    </section>
+    <section>
+            <div class="inp-cont">
+                <img class="ico-inp left" src="/Images/search.svg" alt="Alternate Text" />
+                <input placeholder="Busca un periodo por el nombre" class="inp parr" type="text" name="name" value="" />
+            </div>
+    </section>
+    <section class="d-flex" style="gap:8px;">
+        <p class="parr">Tipo: </p>
+        <select class="select">
+            <option value="value">Todos</option>
+            <option value="value">Finalizados</option>
+            <option value="value">Pendientes</option>
+        </select>
+    </section>
+    <section class="d-flex justify-content-between">
+        <h2 class="t20">Periodos</h2>
+        <p class="parr">0 Periodos registrados</p>
+    </section>
+    <section>
+
+        <section class="card-period">
+            <div>
+                <p>Pendiente</p>
+                <img src="/Images/setting.svg" alt="Alternate Text" />
+            </div>
+            <div>
+                <h3 class="t16">Título</h3>
+                <p class="parr">Fecha</p>
+            </div>
+            <section>
+                <p class="parr">0 horas restantes</p>
+                <progress value="30" max="100"></progress>
+            </section>
+        </section>
+
+
+    </section>
+    
+   
+
+</main>
+
+
+@code {
+    private string fechaHoraActual;
+
+    protected override void OnInitialized()
+    {
+        // Inicializa la fecha y hora actuales
+        ActualizarFechaHora();
+
+        // Configura un temporizador para actualizar la fecha y hora cada minuto
+        var timer = new System.Timers.Timer(60000); // 60000 ms = 1 minuto
+        timer.Elapsed += (sender, e) =>
+        {
+            ActualizarFechaHora();
+            InvokeAsync(StateHasChanged); // Actualiza el UI
+        };
+        timer.Start();
+    }
+
+    private void ActualizarFechaHora()
+    {
+        var ahora = DateTime.Now;
+
+        // Formato de "10 de octubre - 9:30 am"
+        fechaHoraActual = ahora.ToString("d 'de' MMMM - h:mm tt", new System.Globalization.CultureInfo("es-ES"));
+    }
+}

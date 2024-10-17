@@ -1,0 +1,87 @@
+﻿@page "/register"
+@inject NavigationManager navManager
+
+<main style="gap:44px; justify-content:center; display:flex; flex-direction:column; height:100vh;">
+
+    <section class="grid" style="gap:16px;">
+        <h1 class="t32">Crea tu cuenta</h1>
+        <p class="parr">Completa los siguientes datos para crear tu cuenta en la plataforma</p>
+    </section>
+
+    <section class="grid" style="gap:44px;">
+        <section class="grid" style="gap:24px;">
+
+            <div class="grid" style="gap:10px;">
+                <label>Nombre completo</label>
+                <div class="inp-cont">
+                    <img class="ico-inp left" src="/Images/name.svg" alt="Alternate Text" />
+                    <input placeholder="Ingresa tu nombre y un apellido" class="inp parr" type="text" name="name" value="" />
+                </div>
+            </div>
+
+            <div class="grid" style="gap:10px;">
+                <label>Telefono</label>
+                <div class="inp-cont">
+                    <img class="ico-inp left" src="/Images/phone.svg" alt="Alternate Text" />
+                    <input placeholder="Ingresa tu numero de telefono" class="inp parr" type="number" name="name" value="" />
+                </div>
+            </div>
+
+            <div class="grid" style="gap:10px;">
+                <label>Contraseña</label>
+                <div class="inp-cont">
+                    <img class="ico-inp left" src="/Images/pass.svg" alt="Icono de contraseña" />
+                    <input placeholder="Ingresa tu contraseña" class="inp parr" type="@inputTypePassword" />
+                    <img class="ico-inp right" src="/Images/open.svg" alt="Mostrar contraseña" @onclick="TogglePasswordVisibilityPassword" style="display: @(showPassword ? "block" : "none")" />
+                    <img class="ico-inp right" src="/Images/close.svg" alt="Ocultar contraseña" @onclick="TogglePasswordVisibilityPassword" style="display: @(showPassword ? "none" : "block")" />
+                </div>
+            </div>
+
+            <div class="grid" style="gap:10px;">
+                <label>Confirmar Contraseña</label>
+                <div class="inp-cont">
+                    <img class="ico-inp left" src="/Images/pass.svg" alt="Icono de contraseña" />
+                    <input placeholder="Confirma tu contraseña" class="inp parr" type="@inputTypeConfirmPassword" />
+                    <img class="ico-inp right" src="/Images/open.svg" alt="Mostrar contraseña" @onclick="TogglePasswordVisibilityConfirmPassword" style="display: @(showConfirmPassword ? "block" : "none")" />
+                    <img class="ico-inp right" src="/Images/close.svg" alt="Ocultar contraseña" @onclick="TogglePasswordVisibilityConfirmPassword" style="display: @(showConfirmPassword ? "none" : "block")" />
+                </div>
+            </div>
+
+           
+
+        </section>
+
+        <button @onclick="createAccount" class="bton btn-black" type="submit">Crear cuenta</button>
+    </section>
+    <p class="center">¿Ya tienes una cuenta? <span @onclick="login" class="t16" style="cursor:pointer;">Iniciar Sesión</span> </p>
+
+</main>
+
+@code {
+    private void login()
+    {
+        navManager.NavigateTo("/");
+    }
+
+    private void createAccount()
+    {
+        navManager.NavigateTo("/home");
+    }
+
+    private bool showPassword = false;
+    private bool showConfirmPassword = false;
+    private string inputTypePassword = "password";
+    private string inputTypeConfirmPassword = "password";
+
+    private void TogglePasswordVisibilityPassword()
+    {
+        showPassword = !showPassword;
+        inputTypePassword = showPassword ? "text" : "password";
+    }
+
+    private void TogglePasswordVisibilityConfirmPassword()
+    {
+        showConfirmPassword = !showConfirmPassword;
+        inputTypeConfirmPassword = showConfirmPassword ? "text" : "password";
+    }
+}

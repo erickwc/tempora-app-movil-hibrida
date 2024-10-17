@@ -1,0 +1,61 @@
+﻿@page "/"
+@inject NavigationManager navManager
+
+<main style="gap:44px; justify-content:center; display:flex; flex-direction:column; height:100vh;">
+
+    <section class="center grid" style="gap:16px;">
+        <h1 class="t32">Inicia Sesión</h1>
+        <p class="parr">Ingresa tu numero de telefono y contraseña para entrar a tu cuenta</p>
+    </section>
+
+    <section class="grid" style="gap:44px;">
+        <section class="grid" style="gap:24px;">
+
+            <div class="grid" style="gap:10px;">
+                <label>Telefono</label>
+                <div class="inp-cont">
+                    <img class="ico-inp left" src="/Images/phone.svg" alt="Alternate Text" />
+                    <input placeholder="Ingresa tu numero de telefono" class="inp parr" type="number" name="name" value="" />
+                </div>
+            </div>
+
+            <div class="grid" style="gap:10px;">
+                <label>Contraseña</label>
+                <div class="inp-cont">
+                    <img class="ico-inp left" src="/Images/pass.svg" alt="Icono de contraseña" />
+                    <input @ref="passwordInput" placeholder="Ingresa tu contraseña" class="inp parr" type="@inputType" />
+                    <img class="ico-inp right" src="/Images/open.svg" alt="Mostrar contraseña" @onclick="TogglePasswordVisibility" style="display: @(showPassword ? "block" : "none")" />
+                    <img class="ico-inp right" src="/Images/close.svg" alt="Ocultar contraseña" @onclick="TogglePasswordVisibility" style="display: @(showPassword ? "none" : "block")" />
+                </div>
+            </div>
+
+        </section>
+
+        <button @onclick="Aunth" class="bton btn-black" type="submit">Iniciar Sesión</button>
+    </section>
+    <p class="center">¿Aun no tienes una cuenta? <span @onclick="createAccount" class="t16" style="cursor:pointer;">Crear una</span> </p>
+
+</main>
+
+
+@code {
+    private void createAccount()
+    {
+        navManager.NavigateTo("/register");
+    }
+
+    private void Aunth()
+    {
+        navManager.NavigateTo("/home");
+    }
+
+    private bool showPassword = false;
+    private string inputType = "password";
+    private ElementReference passwordInput;
+
+    private void TogglePasswordVisibility()
+    {
+        showPassword = !showPassword;
+        inputType = showPassword ? "text" : "password";
+    }
+}
