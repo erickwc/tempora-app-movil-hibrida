@@ -213,13 +213,21 @@ h1:focus {
 
 .bton {
     padding: 14px 16px;
-    background: var(--black);
-    color: var(--white);
     border-radius: 8px;
     border: none;
     width: 100%;
     display: flex;
     justify-content: space-evenly;
+}
+
+.bton-black {
+    background: var(--black);
+    color: var(--white);
+}
+
+.bton-white {
+    background: none;
+    color: var(--darkgray);
 }
 
 .btn-goback {
