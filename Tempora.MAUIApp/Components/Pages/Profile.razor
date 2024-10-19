@@ -1,5 +1,57 @@
-﻿<h3>Profile</h3>
+﻿@page "/profile"
+@inject NavigationManager navManager
+
+<main style="gap:24px; display:flex; flex-direction:column; justify-content:space-between; height:100vh;">
+
+    <section class="d-grid" style="gap:48px;">
+        <section class="mt-4" style="gap:16px; display:flex; align-items:center; justify-content:space-between;">
+            <button @onclick="Settings" class="btn-goback"> <img src="/Images/back.svg" alt="Alternate Text" /> </button>
+            <div>
+                <h1 class="t20">Mi Perfil</h1>
+            </div>
+            <button style="opacity:0; pointer-events:none;" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn-goback"> <img src="/Images/delete.svg" alt="Alternate Text" /> </button>
+        </section>
+
+
+        <section class="d-grid" style="gap:24px;">
+         
+            <section class="grid" style="gap:44px;">
+                <section class="grid" style="gap:24px;">
+
+                    <div class="grid" style="gap:10px;">
+                        <label>Nombre completo</label>
+                        <div class="inp-cont">
+                            <img class="ico-inp left" src="/Images/name.svg" alt="Alternate Text" />
+                            <input placeholder="Ingresa tu nombre y un apellido" class="inp parr" type="text" name="name" value="" />
+                        </div>
+                    </div>
+
+                    <div class="grid" style="gap:10px;">
+                        <label>Telefono</label>
+                        <div class="inp-cont">
+                            <img class="ico-inp left" src="/Images/phone.svg" alt="Alternate Text" />
+                            <input placeholder="Ingresa tu numero de telefono" class="inp parr" type="number" name="name" value="" />
+                        </div>
+                    </div>
+
+                </section>
+
+            </section>
+        </section>
+    </section>
+
+    <button @onclick="Settings" class="bton bton-black" style="margin-bottom:24px;" type="submit">Guardar cambios</button>
+
+</main>
 
 @code {
+    private void Regresar()
+    {
+        navManager.NavigateTo("/home");
+    }
 
+    private void Settings()
+    {
+        navManager.NavigateTo("/settings");
+    }
 }

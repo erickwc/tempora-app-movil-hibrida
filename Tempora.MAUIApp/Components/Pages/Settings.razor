@@ -15,7 +15,7 @@
 <section class="d-grid text-center" style="gap:8px;">
     <h2 class="t16">Erick caceres</h2>
     <p class="parr">235 horas acumuladas • 2 periodos</p>
-    <button style="justify-content:space-evenly;" class="bton bton-black">Editar perfil</button>
+    <button @onclick="Profile" style="justify-content:space-evenly;" class="bton bton-black">Editar perfil</button>
 </section>
 </section>
 
@@ -23,6 +23,11 @@
     private void Regresar()
     {
         navManager.NavigateTo("/home");
+    }
+
+    private void Profile()
+    {
+        navManager.NavigateTo("/profile");
     }
 
 }
