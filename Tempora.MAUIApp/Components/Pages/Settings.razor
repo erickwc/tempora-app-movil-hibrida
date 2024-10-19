@@ -1,0 +1,28 @@
+﻿@page "/settings"
+@inject NavigationManager navManager
+
+<main>
+    <section class="mt-4" style="gap:16px; display:flex; align-items:center; justify-content:space-between;">
+        <button @onclick="Regresar" class="btn-goback"> <img src="/Images/back.svg" alt="Alternate Text" /> </button>
+        <div>
+            <h1 class="t20">Ajustes</h1>
+        </div>
+        <button data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn-goback"> <img src="/Images/nav.svg" alt="Alternate Text" /> </button>
+    </section>
+</main>
+
+<section class="d-grid" style=" height:80vh; place-items:center;">
+<section class="d-grid text-center" style="gap:8px;">
+    <h2 class="t16">Erick caceres</h2>
+    <p class="parr">235 horas acumuladas • 2 periodos</p>
+    <button style="justify-content:space-evenly;" class="bton bton-black">Editar perfil</button>
+</section>
+</section>
+
+@code {
+    private void Regresar()
+    {
+        navManager.NavigateTo("/home");
+    }
+
+}

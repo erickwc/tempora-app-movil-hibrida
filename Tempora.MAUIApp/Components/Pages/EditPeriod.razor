@@ -4,14 +4,13 @@
 <main style="gap:24px; display:flex; flex-direction:column; justify-content:space-between; height:100vh;">
 
     <section class="d-grid" style="gap:48px;">
-    <section class="mt-4" style="gap:16px; display:flex; align-items:center; justify-content:space-between;">
-        <button @onclick="Regresar" class="btn-goback"> <img src="/Images/back.svg" alt="Alternate Text" /> </button>
-        
-        <div>
-            <h1 class="t20">Editar periodo</h1>
-        </div>
-        <button data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn-goback"> <img src="/Images/delete.svg" alt="Alternate Text" /> </button>
-    </section>
+        <section class="mt-4" style="gap:16px; display:flex; align-items:center; justify-content:space-between;">
+            <button @onclick="Regresar" class="btn-goback"> <img src="/Images/back.svg" alt="Alternate Text" /> </button>
+            <div>
+                <h1 class="t20">Editar periodo</h1>
+            </div>
+            <button data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn-goback"> <img src="/Images/delete.svg" alt="Alternate Text" /> </button>
+        </section>
     
 
     <section class="d-grid" style="gap:24px;">
@@ -61,9 +60,7 @@
 
     <button @onclick="Regresar" class="bton bton-black" style="margin-bottom:24px;" type="submit">Guardar cambios</button>
 
-
 </main>
-
 
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -86,7 +83,5 @@
     {
         navManager.NavigateTo("/home");
     }
-
-   
 }
 

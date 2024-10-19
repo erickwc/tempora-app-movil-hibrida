@@ -13,7 +13,7 @@
             <p class="parr">@fechaHoraActual</p>
         </div>
         <div>
-            <button class="btn-goback"> <img src="/Images/setting.svg" alt="Alternate Text" /> </button>
+            <button @onclick="Settings" class="btn-goback"> <img src="/Images/setting.svg" alt="Alternate Text" /> </button>
         </div>
     </section>
     <section>
@@ -100,5 +100,10 @@
     private void NuevoPeriodo()
     {
         navManager.NavigateTo("/newperiod");
+    }
+
+    private void Settings()
+    {
+        navManager.NavigateTo("/settings");
     }
 }
