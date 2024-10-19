@@ -1,0 +1,21 @@
+﻿@page "/"
+@inject NavigationManager navManager
+
+<main class="d-grid" style="place-items:center; height:100vh; gap:24px;">
+    
+    <div class="d-grid" style="gap:24px; ">
+        <div class="d-grid" style="gap: 16px; text-align: center; justify-items: center;">
+        <img src="/Images/welc.svg" alt="Alternate Text" />
+        <h1 class="t24">La única aplicación de organización de tiempos que vas a necesitar.</h1>
+        <p class="parr">Organizate y logra más cada día con la única app que necesitas para gestionar tu tiempo.</p>
+    </div>
+    <button @onclick="Login" class="bton bton-black">Comenzar ahora</button>
+    </div>
+</main>
+
+@code {
+    private void Login()
+    {
+        navManager.NavigateTo("/login");
+    }
+}

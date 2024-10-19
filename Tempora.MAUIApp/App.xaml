@@ -6,7 +6,7 @@
     <Application.Resources>
         <ResourceDictionary>
 
-            <Color x:Key="PageBackgroundColor">#F6EAB6</Color>
+            <Color x:Key="PageBackgroundColor">#A0C4FF</Color>
             <Color x:Key="PrimaryTextColor">White</Color>
 
             <Style TargetType="Label">
@@ -17,7 +17,7 @@
             <Style TargetType="Button">
                 <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}" />
                 <Setter Property="FontFamily" Value="OpenSansRegular" />
-                <Setter Property="BackgroundColor" Value="#F6EAB6" />
+                <Setter Property="BackgroundColor" Value="#A0C4FF" />
                 <Setter Property="Padding" Value="14,10" />
             </Style>
 
