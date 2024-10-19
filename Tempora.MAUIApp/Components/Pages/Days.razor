@@ -24,23 +24,23 @@
     <section>
 
         <section class="card-period d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center" style="gap:24px;">
-            <div>
-                <img style="padding:8px; background:white; border-radius:8px;" src="/Images/day.svg" alt="Alternate Text" />
+            <div class="d-flex align-items-center" style="gap:20px;">
+                <div>
+                    <img style="padding:8px; background:white; border-radius:8px;" src="/Images/day.svg" alt="Alternate Text" />
+                </div>
+                <div class="grid" style="gap:8px;">
+                    <h3 class="t16">17/20/2024</h3>
+                    <p class="parr">8 horas realizadas</p>
+                </div>
             </div>
-            <div class="grid" style="gap:8px;">
-                <h3 class="t16">17/20/2024</h3>
-                <p class="parr">8 horas realizadas</p>
-            </div>
-            </div>
-            <div>
-                <button class="bton" style="background:white; color:black;">Editar</button>
-            </div>
+                <div>
+                    <button @onclick="EditDay" class="bton" style="background:white; color:black;">Editar</button>
+                </div>
         </section>
 
     </section>
 
-    <button  style="position: fixed; bottom: 24px; left: 24px; right: 24px; width: calc(100% - 48px);" class="bton bton-black" type="submit">Agregar nuevo día</button>
+    <button @onclick="NewDay" style="position: fixed; bottom: 24px; left: 24px; right: 24px; width: calc(100% - 48px);" class="bton bton-black" type="submit">Agregar nuevo día</button>
 
 </main>
 
@@ -48,5 +48,15 @@
     private void Home()
     {
         navManager.NavigateTo("/home");
+    }
+
+    private void NewDay()
+    {
+        navManager.NavigateTo("/newday");
+    }
+
+    private void EditDay()
+    {
+        navManager.NavigateTo("/editday");
     }
 }

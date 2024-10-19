@@ -1,0 +1,137 @@
+﻿@page "/editday"
+@inject NavigationManager navManager
+
+<main style="gap:24px; display:flex; flex-direction:column; justify-content:space-between; height:100vh;">
+
+    <section class="d-grid" style="gap:48px;">
+        <section class="mt-4" style="gap:24px; display:flex; align-items:center; justify-content:space-between;">
+            <button @onclick="Regresar" class="btn-goback"> <img src="/Images/back.svg" alt="Alternate Text" /> </button>
+            <div>
+                <h1 class="t20">Editar</h1>
+               @*  <p class="parr">Edita tus horas</p> *@
+            </div>
+            <button data-bs-toggle="modal" data-bs-target="#staticBackdrop2" class="btn-goback"> <img src="/Images/delete.svg" alt="Alternate Text" /> </button>
+
+        </section>
+
+
+        <section class="d-grid" style="gap:48px;">
+
+            <div class="d-grid" style="gap:24px;">
+                <section class="grid">
+                    <h1 class="t16">Fecha de actividad</h1>
+                </section>
+
+                <section class="grid" style="gap:24px;">
+                    <div class="grid" style="gap:10px;">
+                        <div class="inp-cont">
+                            <img class="ico-inp left" src="/Images/date.svg" alt="Alternate Text" />
+                            <input placeholder="Ingresa el nombre" class="inp parr" type="date" name="name" value="" />
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="d-grid" style="gap:24px;">
+
+                <section class="d-flex justify-content-between align-items-center">
+                    <section class="grid">
+                        <h1 class="t16">Turno de la mañana</h1>
+                    </section>
+                    <img data-bs-toggle="modal" data-bs-target="#staticBackdrop" src="/Images/quest.svg" alt="Alternate Text" />
+                </section>
+
+                <section class="d-grid" style="gap:24px; grid-template-columns:1fr 1fr;">
+                    <div class="grid" style="gap:10px;">
+                        <label>Hora de inicio</label>
+                        <div class="inp-cont">
+                            <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                            <input placeholder="Ingresa la hora" class="inp parr" type="time" name="name" value="" />
+                        </div>
+                    </div>
+
+                    <div class="grid" style="gap:10px;">
+                        <label>Hora de finalización</label>
+                        <div class="inp-cont">
+                            <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                            <input placeholder="Ingresa la hora" class="inp parr" type="time" name="name" value="" />
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="d-grid" style="gap:24px;">
+                <section class="grid">
+                    <h1 class="t16">Turno de la tarde</h1>
+                </section>
+
+                <section class="d-grid" style="gap:24px; grid-template-columns:1fr 1fr;">
+
+                    <div class="grid" style="gap:10px; width:100%;">
+                        <label>Hora de inicio</label>
+                        <div class="inp-cont">
+                            <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                            <input placeholder="Ingresa la hora" class="inp parr" type="time" name="name" value="" />
+                        </div>
+                    </div>
+
+                    <div class="grid" style="gap:10px; width:100%;">
+                        <label>Hora de finalización</label>
+                        <div class="inp-cont">
+                            <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                            <input placeholder="Ingresa la hora" class="inp parr" type="time" name="name" value="" />
+                        </div>
+                    </div>
+
+                </section>
+            </div>
+
+
+            <div>
+                <p> <span class="t16">Total de horas realizadas:</span> <span class="parr">8 horas</span> </p>
+            </div>
+
+
+        </section>
+    </section>
+
+    <button @onclick="Regresar" class="bton bton-black" style="margin-bottom:24px;" type="submit">Guardar nuevo día</button>
+
+</main>
+
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content d-grid" style="padding:32px 16px; gap:24px; border-radius:24px; margin:0px 16px;">
+            <div class="d-grid" style="gap:8px;">
+                <h2 class="t20 center">Turnos opcionales</h2>
+                <p class="parr center">Si solo realizas el turno de la mañana puedes dejar el turno de la tarde vacio o viceversa.</p>
+            </div>
+            <div class="d-grid" style="gap:8px;">
+                <button data-bs-dismiss="modal" aria-label="Close" class="bton bton-black">Regresar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content d-grid" style="padding:32px 16px; gap:24px; border-radius:24px; margin:0px 16px;">
+            <div class="d-grid" style="gap:8px;">
+                <h2 class="t20 center">¿Estas seguro de eliminar?</h2>
+                <p class="parr center">Si eliminas este día, toda la información relacionada se perderá para siempre.</p>
+            </div>
+            <div class="d-grid" style="gap:8px;">
+                <button data-bs-dismiss="modal" aria-label="Close" @onclick="Regresar"class="bton bton-black">Si, quiero eliminar este día</button>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close" class="bton bton-white">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private void Regresar()
+    {
+        navManager.NavigateTo("/days");
+    }
+}

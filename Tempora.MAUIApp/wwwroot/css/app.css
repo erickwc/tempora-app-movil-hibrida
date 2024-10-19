@@ -156,21 +156,22 @@ h1:focus {
     position: relative;
     display: flex;
     align-items: center;
-    width: 100%;
+    width: 100%; /* Asegura que ocupe todo el ancho disponible */
 }
 
 .inp {
     padding: 12px 14px;
     padding-left: 46px;
-    /*padding-right: 46px;*/
     background: var(--ligthgray);
-    border: none;
+    border: 1px solid var(--ligthgray);
     outline: none;
     border-radius: 8px;
-    width: 100%;
+    width: 100%; /* Ocupa el 100% del ancho del contenedor */
+    box-sizing: border-box; /* Asegura que el padding y el ancho se calculen correctamente */
     color: var(--black);
     transition: .1s ease-in-out;
 }
+
 
 .inp::placeholder {
     color: var(--darkgray);
@@ -206,6 +207,30 @@ h1:focus {
     -moz-appearance: none; 
     background:var(--white);
 }
+
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none; 
+}
+
+input[type="date"] {
+    -webkit-appearance: none; 
+    -moz-appearance: textfield; 
+    appearance: textfield; 
+}
+
+input[type="time"]::-webkit-inner-spin-button,
+input[type="time"]::-webkit-calendar-picker-indicator {
+    display: none; 
+}
+
+input[type="time"] {
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: textfield; 
+}
+
+
 
 /*buttons*/
 
@@ -243,7 +268,7 @@ h1:focus {
     padding:24px;
     background-color:var(--pink);
     border-radius:24px;
-    z-index:100;
+    z-index:1;
 }
 
 
@@ -252,7 +277,7 @@ h1:focus {
     padding: 8px;
     border-radius: 8px;
     border: none;
-    z-index: 200;
+    z-index: 2;
 }
   
 
