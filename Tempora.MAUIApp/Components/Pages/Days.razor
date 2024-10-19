@@ -1,0 +1,52 @@
+﻿@page "/days"
+@inject NavigationManager navManager
+
+<main style="gap:24px; display:flex; flex-direction:column; height:100vh;">
+    <section class="mt-4" style="gap:16px; display:flex; align-items:center;">
+        <button @onclick="Home" class="btn-goback"> <img src="/Images/back.svg" alt="Alternate Text" /> </button>
+        <div>
+            <h1 class="t20">Servicio social ESFE</h1>
+            <p class="parr">Control de tus horas</p>
+        </div>
+    </section>
+   
+    <section>
+        <div class="inp-cont">
+            <img class="ico-inp left" src="/Images/search.svg" alt="Alternate Text" />
+            <input placeholder="Busca un dia por su fecha" class="inp parr" type="text" name="name" value="" />
+        </div>
+    </section>
+
+    <section class="d-flex justify-content-between">
+        <h2 class="t20">Días</h2>
+        <p class="parr" style="font-size:14px;">2 dias registrados - 13:30 horas</p>
+    </section>
+    <section>
+
+        <section class="card-period d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center" style="gap:24px;">
+            <div>
+                <img style="padding:8px; background:white; border-radius:8px;" src="/Images/day.svg" alt="Alternate Text" />
+            </div>
+            <div class="grid" style="gap:8px;">
+                <h3 class="t16">17/20/2024</h3>
+                <p class="parr">8 horas realizadas</p>
+            </div>
+            </div>
+            <div>
+                <button class="bton" style="background:white; color:black;">Editar</button>
+            </div>
+        </section>
+
+    </section>
+
+    <button  style="position: fixed; bottom: 24px; left: 24px; right: 24px; width: calc(100% - 48px);" class="bton bton-black" type="submit">Agregar nuevo día</button>
+
+</main>
+
+@code {
+    private void Home()
+    {
+        navManager.NavigateTo("/home");
+    }
+}

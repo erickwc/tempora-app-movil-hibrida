@@ -35,22 +35,21 @@
         <p class="parr">0 Periodos registrados</p>
     </section>
     <section>
-
        
-        <section class="card-period grid" style="gap:42px;">
+        <section @onclick="Days" class="card-period grid" style="gap:42px;">
             <div class="d-flex justify-content-between align-items-center">
                 <p class="status">Pendiente</p>
                 <span @onclick="EditarPeriodo" class="bton-card"><img src="/Images/sttngcard.svg" alt="Alternate Text" /></span>
             </div>
             <div class="grid" style="gap:16px;">
                 <div class="grid" style="gap:8px;">
-                <h3 class="t16">Servicio Social ESFE</h3>
-                <p class="parr">Fecha</p>
-            </div>
-            <div>
-                <p style="text-align:end;" class="parr">0 horas restantes</p>
-                <progress value="30" max="100"></progress>
-            </div>
+                    <h3 class="t16">Servicio Social ESFE</h3>
+                    <p class="parr">Fecha</p>
+                </div>
+                <div>
+                    <p style="text-align:end;" class="parr">0 horas restantes</p>
+                    <progress value="30" max="100"></progress>
+                </div>
             </div>
         </section>
       
@@ -92,14 +91,19 @@
         fechaHoraActual = ahora.ToString("d 'de' MMMM - h:mm tt", new System.Globalization.CultureInfo("es-ES"));
     }
 
-    private void EditarPeriodo()
+    private void Days()
     {
-        navManager.NavigateTo("/editperiod");
+        navManager.NavigateTo("/days");
     }
 
     private void NuevoPeriodo()
     {
         navManager.NavigateTo("/newperiod");
+    }
+
+    private void EditarPeriodo()
+    {
+        navManager.NavigateTo("/editperiod");
     }
 
     private void Settings()
