@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using Tempora.MAUIApp.Models;
+using Tempora.MAUIApp.Services;
 
 namespace Tempora.MAUIApp
 {
@@ -20,6 +22,15 @@ namespace Tempora.MAUIApp
     		builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
 #endif
+
+            builder.Services.AddScoped(http => new HttpClient{
+                BaseAddress = new Uri("http://www.tempora.somee.com/")
+            });
+
+            builder.Services.AddScoped<UsuarioService>();
+            builder.Services.AddScoped<DiaService>();
+            builder.Services.AddScoped<PeriodoService>();
+            builder.Services.AddScoped<Estado>();
 
             return builder.Build();
         }
