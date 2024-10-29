@@ -20,6 +20,21 @@ namespace Tempora.MAUIApp.Services
             _http = http;
         }
 
+        public async Task<Usuario> Autenticar(Credenciales credenciales)
+        {
+            string url = _endPoint + "/autenticacion";
+
+            HttpResponseMessage response = await _http.PostAsJsonAsync(url, credenciales);
+
+            var content = await response.Content.ReadAsStringAsync();
+            Usuario obj = JsonSerializer.Deserialize<Usuario>(content, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            }) ?? new Usuario();
+
+            return obj;
+        }
+
         // GET: api/Usuario
         public async Task<List<Usuario>> ObtenerTodos()
         {
@@ -33,33 +48,15 @@ namespace Tempora.MAUIApp.Services
             return await _http.GetFromJsonAsync<Usuario>(url) ?? new Usuario();
         }
 
-        // POST: api/Usuario/login
-        public async Task<Usuario?> Login(string telefono, string clave)
+        // GET: api/Usuario/searchbyuserid/{usuarioId}
+        public async Task<string> ObtenerNombrePorId(int usuarioId)
         {
-            string url = $"{_endPoint}/login?telefono={telefono}&clave={clave}";
-            HttpResponseMessage response = await _http.PostAsync(url, null);
+            string url = $"{_endPoint}/searchbyuserid?usuarioId={usuarioId}";
+            string nombreUsuario = await _http.GetStringAsync(url);
 
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<Usuario>(content);
-            }
-            return null;
+            return nombreUsuario;
         }
 
-        // GET: api/Usuario/searchbynumber
-        public async Task<object?> BuscarPorNumero(string telefono)
-        {
-            string url = $"{_endPoint}/searchbynumber?telefono={telefono}";
-            HttpResponseMessage response = await _http.GetAsync(url);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<object>(content);
-            }
-            return null;
-        }
 
         // GET: api/Usuario/search?telefono=1234567890&clave=miClave
         public async Task<List<Usuario>> Buscar(string telefono, string clave)

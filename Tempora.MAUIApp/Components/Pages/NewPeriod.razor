@@ -1,61 +1,117 @@
 ﻿@page "/newperiod"
 @inject NavigationManager navManager
+@inject PeriodoService periodoService
+@inject IJSRuntime jsRuntime
 
 <main style="gap:24px; display:flex; flex-direction:column; height:100vh;">
-
-<section class="mt-4" style="gap:16px; display:flex; align-items:center;">
-
+    <section class="mt-4" style="gap:16px; display:flex; align-items:center;">
         <button @onclick="Regresar" class="btn-goback"> <img src="/Images/back.svg" alt="Alternate Text" /> </button>
         <div>
             <h1 class="t20">Nuevo periodo</h1>
             <p class="parr">Completa los siguientes campos</p>
         </div>
-</section>
+    </section>
 
-<section class="grid">
+    <section class="grid">
         <h1 class="t16">Detalles</h1>
     </section>
 
     <section class="grid" style="gap:44px;">
-        <section class="grid" style="gap:24px;">
 
-            <div class="grid" style="gap:10px;">
-                <label>Nombre del nuevo periodo</label>
-                <div class="inp-cont">
-                    <img class="ico-inp left" src="/Images/add.svg" alt="Alternate Text" />
-                    <input placeholder="Ingresa el nombre" class="inp parr" type="text" name="name" value="" />
-                </div>
+        <div class="grid" style="gap:10px;">
+            <label>Nombre del nuevo periodo</label>
+            <div class="inp-cont">
+                <img class="ico-inp left" src="/Images/add.svg" alt="Alternate Text" />
+                <input type="text" placeholder="Ingresa el nombre" class="inp parr" @onchange="(e) => periodo.Nombre = e.Value.ToString()" />
             </div>
+        </div>
 
-            <div class="grid" style="gap:10px;">
-                <label>Cantidad de horas</label>
-                <div class="inp-cont">
-                    <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
-                    <input placeholder="Ingresa la cantidad de horas" class="inp parr" type="number" name="name" value="" />
-                </div>
+        <div class="grid" style="gap:10px;">
+            <label>Cantidad de horas</label>
+            <div class="inp-cont">
+                <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                <input type="number" placeholder="Ingresa la cantidad de horas" class="inp parr"
+                       @onchange="(e) =>
+               {
+                   periodo.CantidadHoras = int.Parse(e.Value.ToString());
+                   periodo.HorasPendientes = e.Value.ToString(); // Asignar el valor de CantidadHoras a HorasPendientes
+               }" />
             </div>
+        </div>
 
-            <div class="grid" style="gap:10px;">
-                <label>Fecha de inicio</label>
-                <div class="inp-cont">
-                    <img class="ico-inp left" src="/Images/date.svg" alt="Alternate Text" />
-                    <input placeholder="Ingresa la cantidad de horas" class="inp parr" type="date" name="name" value="" />
-                </div>
+        <div class="grid" style="gap:10px;">
+            <label>Fecha de inicio</label>
+            <div class="inp-cont">
+                <img class="ico-inp left" src="/Images/date.svg" alt="Alternate Text" />
+                <input type="date" class="inp parr" @onchange="(e) => periodo.FechaRegistro = DateTime.Parse(e.Value.ToString())" />
             </div>
+        </div>
+        <div class="grid d-none" style="gap:10px;">
+            <label>Id Estado</label>
+            <div class="inp-cont">
+                <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                <input type="number" placeholder="Ingresa el estado" class="inp parr" @onchange="(e) => periodo.EstadoId = int.Parse(e.Value.ToString())" value="@periodo.EstadoId" />
+            </div>
+        </div>
 
-        </section>
+        <div class="grid d-none" style="gap:10px;">
+            <label>Id Usuario</label>
+            <div class="inp-cont">
+                <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                <input type="number" placeholder="Ingresa el ID del usuario" class="inp parr" @onchange="(e) => periodo.UsuarioId = int.Parse(e.Value.ToString())" value="@periodo.UsuarioId" />
+            </div>
+        </div>
 
+        <div class="grid d-none" style="gap:10px;">
+            <label>Horas Realizadas</label>
+            <div class="inp-cont">
+                <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                <input type="text" placeholder="Ingresa las horas realizadas" class="inp parr" @onchange="(e) => periodo.HorasRealizadas = e.Value.ToString()" value="@periodo.HorasRealizadas" />
+            </div>
+        </div>
+
+        <div class="grid d-none" style="gap:10px;">
+            <label>Horas Pendientes</label>
+            <div class="inp-cont">
+                <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                <input type="text" placeholder="Ingresa las horas pendientes" class="inp parr"
+                       @onchange="(e) => periodo.HorasPendientes = e.Value.ToString()"
+                       value="@periodo.HorasPendientes" />
+            </div>
+        </div>
+
+        <button @onclick="Guardar" class="bton bton-black">Guardar nuevo periodo</button>
     </section>
-
 </main>
 
-<button @onclick="Regresar" style="position: fixed; bottom: 24px; left: 24px; right: 24px; width: calc(100% - 48px);" class="bton bton-black" type="submit">Guardar nuevo periodo</button>
-
-
-
 @code {
+
+    
+
+    int usuarioId;
+    Periodo periodo = new Periodo();
+
+    protected override async Task OnInitializedAsync()
+    {
+        string dato = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "UsuarioId");
+        usuarioId = Convert.ToInt32(dato);
+
+        periodo.UsuarioId = usuarioId;
+        periodo.EstadoId = 2;              
+        periodo.HorasRealizadas = "0";    
+        periodo.HorasPendientes = "0";
+        periodo.HoraRegistro = DateTime.Now.TimeOfDay;
+    }
+
     private void Regresar()
     {
+        navManager.NavigateTo("/home");
+    }
+
+    protected async Task Guardar()
+    {
+        // Llama al servicio para guardar el periodo
+        Periodo obj = await periodoService.Guardar(periodo);
         navManager.NavigateTo("/home");
     }
 }

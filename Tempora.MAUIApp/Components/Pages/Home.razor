@@ -1,27 +1,28 @@
 ﻿@page "/home"
 @inject NavigationManager navManager
+@inject UsuarioService usuarioService
+@inject PeriodoService periodoService
+@inject IJSRuntime jsRuntime
 
 <main style="gap:24px; display:flex; flex-direction:column; height:100vh;">
 
-   
     <section class="mt-4" style="gap:16px; display:flex; justify-content:space-between; align-items:center;">
-        @* <div>
-            <img class="img-perfil" src="/Images/setting.svg" alt="Alternate Text" />
-        </div> *@
         <div>
-            <h1 class="t16">Erick Caceres</h1>
+            <h1 class="t16">@nombre</h1>
             <p class="parr">@fechaHoraActual</p>
         </div>
         <div>
             <button @onclick="Settings" class="btn-goback"> <img src="/Images/setting.svg" alt="Alternate Text" /> </button>
         </div>
     </section>
+
     <section>
-            <div class="inp-cont">
-                <img class="ico-inp left" src="/Images/search.svg" alt="Alternate Text" />
-                <input placeholder="Busca un periodo por el nombre" class="inp parr" type="text" name="name" value="" />
-            </div>
+        <div class="inp-cont">
+            <img class="ico-inp left" src="/Images/search.svg" alt="Alternate Text" />
+            <input placeholder="Busca un periodo por el nombre" class="inp parr" type="text" name="name" value="" />
+        </div>
     </section>
+
     <section class="d-flex" style="gap:8px;">
         <p class="parr">Tipo: </p>
         <select class="select">
@@ -30,54 +31,99 @@
             <option value="value">Pendientes</option>
         </select>
     </section>
+
     <section class="d-flex justify-content-between">
         <h2 class="t20">Periodos</h2>
-        <p class="parr">0 Periodos registrados</p>
-    </section>
-    <section>
-       
-        <section @onclick="Days" class="card-period grid" style="gap:42px;">
-            <div class="d-flex justify-content-between align-items-center">
-                <p class="status">Pendiente</p>
-                <span @onclick:stopPropagation @onclick="EditarPeriodo" class="bton-card">
-                    <img src="/Images/sttngcard.svg" alt="Alternate Text" />
-                </span>
-            </div>
-            <div class="grid" style="gap:16px;">
-                <div class="grid" style="gap:8px;">
-                    <h3 class="t16">Servicio Social ESFE</h3>
-                    <p class="parr">Fecha</p>
-                </div>
-                <div>
-                    <p style="text-align:end;" class="parr">0 horas restantes</p>
-                    <progress value="30" max="100"></progress>
-                </div>
-            </div>
-        </section>
-
+        <p class="parr">@periodos.Count Periodos registrados</p>
     </section>
 
-    <button @onclick="NuevoPeriodo" style="position: fixed; bottom: 24px; left: 24px; right: 24px; width: calc(100% - 48px);" class="bton bton-black" type="submit">Nuevo periodo</button>
+    <section class="d-grid" style="gap:24px; padding-bottom:100px; z-index:2; position: relative;">
+        @if (periodos.Count > 0)
+        {
+            @foreach (var (periodo, index) in periodos.Select((p, i) => (p, i)))
+            {
+                <section @onclick="() => VerPeriodo(periodo.PeriodoId)" class="card-period grid" style="gap:42px; background-color:@GetBackgroundColor(index);">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <p class="status">
+                            @(periodo.EstadoId == 2 ? "Pendiente" : periodo.EstadoId == 1 ? "Finalizado" : "Desconocido")
+                        </p>
+                        <span @onclick:stopPropagation @onclick="() => EditarPeriodo(periodo.PeriodoId)" class="bton-card">
+                            <img src="/Images/sttngcard.svg" alt="Alternate Text" />
+                        </span>
+                    </div>
+                    <div class="grid" style="gap:16px;">
+                        <div class="grid" style="gap:8px;">
+                            <h3 class="t16">@periodo.Nombre</h3>
+                            <p class="parr">@periodo.FechaRegistro.ToString("d 'de' MMMM yyyy")</p>
+                        </div>
+                        <div>
+                            <p style="text-align:end;" class="parr">@periodo.HorasPendientes horas restantes</p>
+                            <progress value="@CalcularProgreso(periodo.HorasRealizadas)" max="100"></progress>
+                        </div>
+                    </div>
+                </section>
+            }
+        }
+        else
+        {
+            <p>No hay periodos registrados.</p>
+        }
+    </section>
 
-
+    <button @onclick="NuevoPeriodo" style="z-index:3; position: fixed; bottom: 24px; left: 24px; right: 24px; width: calc(100% - 48px);" class="bton bton-black" type="submit">Nuevo periodo</button>
 
 </main>
 
-
 @code {
+    int usuarioId;
+    private string nombre;
     private string fechaHoraActual;
+    private List<Periodo> periodos = new List<Periodo>();
+
+    private int CalcularProgreso(string horasRealizadas)
+    {
+        int horas = 0;
+        int minutos = 0;
+
+        var partes = horasRealizadas.Split(' ');
+
+        if (int.TryParse(partes[0], out horas))
+        {
+            if (partes.Length > 3 && int.TryParse(partes[3], out minutos))
+            {
+                horas += minutos / 60; 
+            }
+        }
+
+        return horas; 
+    }
+
+    private string[] colores = { "#FBF0FF", "#EBFFFB", "#FDF6E3", "#F0F4FF" };
+
+    private string GetBackgroundColor(int index)
+    {
+        return colores[index % colores.Length];
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        string dato = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "UsuarioId");
+        usuarioId = Convert.ToInt32(dato);
+
+        nombre = await usuarioService.ObtenerNombrePorId(usuarioId);
+
+        // Llama al método para obtener los periodos del usuario
+        periodos = await periodoService.BuscarPorUsuarioId(usuarioId);
+    }
 
     protected override void OnInitialized()
     {
-        // Inicializa la fecha y hora actuales
         ActualizarFechaHora();
-
-        // Configura un temporizador para actualizar la fecha y hora cada minuto
-        var timer = new System.Timers.Timer(60000); // 60000 ms = 1 minuto
+        var timer = new System.Timers.Timer(60000); // 1 minuto
         timer.Elapsed += (sender, e) =>
         {
             ActualizarFechaHora();
-            InvokeAsync(StateHasChanged); // Actualiza el UI
+            InvokeAsync(StateHasChanged);
         };
         timer.Start();
     }
@@ -85,14 +131,7 @@
     private void ActualizarFechaHora()
     {
         var ahora = DateTime.Now;
-
-        // Formato de "10 de octubre - 9:30 am"
         fechaHoraActual = ahora.ToString("d 'de' MMMM - h:mm tt", new System.Globalization.CultureInfo("es-ES"));
-    }
-
-    private void Days()
-    {
-        navManager.NavigateTo("/days");
     }
 
     private void NuevoPeriodo()
@@ -100,9 +139,14 @@
         navManager.NavigateTo("/newperiod");
     }
 
-    private void EditarPeriodo()
+    private void VerPeriodo(int periodoId)
     {
-        navManager.NavigateTo("/editperiod");
+        navManager.NavigateTo($"/days/{periodoId}");
+    }
+
+    private void EditarPeriodo(int periodoId)
+    {
+        navManager.NavigateTo($"/editperiod/{periodoId}");
     }
 
     private void Settings()

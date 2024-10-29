@@ -1,8 +1,8 @@
-﻿@page "/editperiod"
+﻿@page "/editperiod/{periodoId:int}"
 @inject NavigationManager navManager
+@inject PeriodoService periodoService
 
 <main style="gap:24px; display:flex; flex-direction:column; justify-content:space-between; height:100vh;">
-
     <section class="d-grid" style="gap:48px;">
         <section class="mt-4" style="gap:16px; display:flex; align-items:center; justify-content:space-between;">
             <button @onclick="Regresar" class="btn-goback"> <img src="/Images/back.svg" alt="Alternate Text" /> </button>
@@ -12,76 +12,110 @@
             <button data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn-goback"> <img src="/Images/delete.svg" alt="Alternate Text" /> </button>
         </section>
     
+        <section class="d-grid" style="gap:24px;">
+            <section class="grid">
+                <h1 class="t16">Detalles</h1>
+            </section>
+            <section class="grid" style="gap:44px;">
+                <section class="grid" style="gap:24px;">
+                    <div class="grid" style="gap:10px;">
+                        <label>Nombre del nuevo periodo</label>
+                        <div class="inp-cont">
+                            <img class="ico-inp left" src="/Images/add.svg" alt="Alternate Text" />
+                            <input type="text" placeholder="Ingresa el nombre" class="inp parr" @bind="@periodo.Nombre" />
+                        </div>
+                    </div>
 
-    <section class="d-grid" style="gap:24px;">
-    <section class="grid">
-        <h1 class="t16">Detalles</h1>
-    </section>
-    <section class="grid" style="gap:44px;">
-        <section class="grid" style="gap:24px;">
+                    <div class="grid" style="gap:10px;">
+                        <label>Cantidad de horas</label>
+                        <div class="inp-cont">
+                            <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                            <input type="number" placeholder="Ingresa la cantidad de horas" class="inp parr" @bind="@periodo.CantidadHoras" />
+                        </div>
+                    </div>
 
-            <div class="grid" style="gap:10px;">
-                <label>Nombre del nuevo periodo</label>
-                <div class="inp-cont">
-                    <img class="ico-inp left" src="/Images/add.svg" alt="Alternate Text" />
-                    <input placeholder="Ingresa el nombre" class="inp parr" type="text" name="name" value="" />
-                </div>
-            </div>
+                    <div class="grid" style="gap:10px;">
+                        <label>Fecha de inicio</label>
+                        <div class="inp-cont">
+                            <img class="ico-inp left" src="/Images/date.svg" alt="Alternate Text" />
+                            <input type="date" class="inp parr" @bind="@periodo.FechaRegistro" />
+                        </div>
+                    </div>
 
-            <div class="grid" style="gap:10px;">
-                <label>Cantidad de horas</label>
-                <div class="inp-cont">
-                    <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
-                    <input placeholder="Ingresa la cantidad de horas" class="inp parr" type="number" name="name" value="" />
-                </div>
-            </div>
+                    <div class="grid d-none" style="gap:10px;">
+                        <label>Id Estado</label>
+                        <div class="inp-cont">
+                            <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                            <input type="number" placeholder="Ingresa el estado" class="inp parr" @bind="@periodo.EstadoId" />
+                        </div>
+                    </div>
 
-            <div class="grid" style="gap:10px;">
-                <label>Fecha de inicio</label>
-                <div class="inp-cont">
-                    <img class="ico-inp left" src="/Images/date.svg" alt="Alternate Text" />
-                    <input placeholder="Ingresa la cantidad de horas" class="inp parr" type="date" name="name" value="" />
-                </div>
-            </div>
+                    <div class="grid d-none" style="gap:10px;">
+                        <label>Id Usuario</label>
+                        <div class="inp-cont">
+                            <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                            <input type="number" placeholder="Ingresa el ID del usuario" class="inp parr" @bind="@periodo.UsuarioId" />
+                        </div>
+                    </div>
 
-            <div class="grid" style="gap:10px;">
-                <label>Hora de inicio</label>
-                <div class="inp-cont">
-                    <img class="ico-inp left" src="/Images/time.svg" alt="Alternate Text" />
-                    <input placeholder="Ingresa la cantidad de horas" class="inp parr" type="time" name="name" value="" />
-                </div>
-            </div>
+                    <div class="grid d-none" style="gap:10px;">
+                        <label>Horas Realizadas</label>
+                        <div class="inp-cont">
+                            <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                            <input type="text" placeholder="Ingresa las horas realizadas" class="inp parr" @bind="@periodo.HorasRealizadas" />
+                        </div>
+                    </div>
 
+                    <div class="grid d-none" style="gap:10px;">
+                        <label>Horas Pendientes</label>
+                        <div class="inp-cont">
+                            <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                            <input type="text" placeholder="Ingresa las horas pendientes" class="inp parr" @bind="@periodo.HorasPendientes" />
+                        </div>
+                    </div>
+
+                </section>
+                </section>
+            </section>
         </section>
 
-    </section>
-    </section>
-    </section>
+        <button @onclick="Regresar" class="bton bton-black" style="margin-bottom:24px;" type="submit">Guardar cambios</button>
+    </main>
 
-    <button @onclick="Regresar" class="bton bton-black" style="margin-bottom:24px;" type="submit">Guardar cambios</button>
-
-</main>
-
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content d-grid" style="padding:32px 16px; gap:24px; border-radius:24px; margin:0px 16px;">
-            <div class="d-grid" style="gap:8px;">
-                <h2 class="t20 center">¿Estas seguro de eliminar?</h2>
-                <p class="parr center">Si eliminas este periodo de tiempo, todas las horas acumuladas e informacion relacionada se perderá para siempre.</p>
-            </div>
-            <div class="d-grid" style="gap:8px;">
-                <button @onclick="Regresar" data-bs-dismiss="modal" aria-label="Close" class="bton bton-black">Si, quiero eliminar este periodo</button>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close" class="bton bton-white" >Cancelar</button>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content d-grid" style="padding:32px 16px; gap:24px; border-radius:24px; margin:0px 16px;">
+                <div class="d-grid" style="gap:8px;">
+                    <h2 class="t20 center">¿Estás seguro de eliminar?</h2>
+                    <p class="parr center">Si eliminas este periodo de tiempo, todas las horas acumuladas e información relacionada se perderá para siempre.</p>
+                </div>
+                <div class="d-grid" style="gap:8px;">
+                    <button @onclick="EliminarPeriodo" data-bs-dismiss="modal" aria-label="Close" class="bton bton-black">Sí, quiero eliminar este periodo</button>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close" class="bton bton-white">Cancelar</button>
+                </div>
             </div>
         </div>
-    </div>
-</div> 
-
+    </div> 
 
 @code {
     private void Regresar()
     {
         navManager.NavigateTo("/home");
     }
-}
 
+    private Periodo periodo = new Periodo(); // Corrige la inicialización aquí
+
+    [Parameter]
+    public int periodoId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        periodo = await periodoService.ObtenerPorId(periodoId); // Asignar el resultado al objeto periodo
+    }
+
+    private async Task EliminarPeriodo()
+    {
+        await periodoService.Eliminar(periodoId);
+        navManager.NavigateTo("/home");
+    }
+}

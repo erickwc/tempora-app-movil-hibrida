@@ -13,7 +13,7 @@ namespace Tempora.MAUIApp.Models
         public int PeriodoId { get; set; }
 
         [Required]
-        public byte EstadoId { get; set; }
+        public int EstadoId { get; set; }
 
         [Required]
         public int UsuarioId { get; set; }

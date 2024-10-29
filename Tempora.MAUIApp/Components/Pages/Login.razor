@@ -1,5 +1,7 @@
 ﻿@page "/login"
 @inject NavigationManager navManager
+@inject UsuarioService usuarioService
+@inject IJSRuntime jsRuntime
 
 <main style="gap:44px; justify-content:center; display:flex; flex-direction:column; height:100vh;">
 
@@ -9,13 +11,14 @@
     </section>
 
     <section class="grid" style="gap:44px;">
+        <EditForm Model="credenciales" OnValidSubmit="Autenticar">
         <section class="grid" style="gap:24px;">
-
+           
             <div class="grid" style="gap:10px;">
                 <label>Telefono</label>
                 <div class="inp-cont">
                     <img class="ico-inp left" src="/Images/phone.svg" alt="Alternate Text" />
-                    <input placeholder="Ingresa tu numero de telefono" class="inp parr" type="number" name="name" value="" />
+                        <InputText @bind-Value="credenciales.Telefono" placeholder="Ingresa tu numero de telefono" class="inp parr" />
                 </div>
             </div>
 
@@ -23,15 +26,14 @@
                 <label>Contraseña</label>
                 <div class="inp-cont">
                     <img class="ico-inp left" src="/Images/pass.svg" alt="Icono de contraseña" />
-                    <input @ref="passwordInput" placeholder="Ingresa tu contraseña" class="inp parr" type="@inputType" />
-                    <img class="ico-inp right" src="/Images/open.svg" alt="Mostrar contraseña" @onclick="TogglePasswordVisibility" style="display: @(showPassword ? "block" : "none")" />
-                    <img class="ico-inp right" src="/Images/close.svg" alt="Ocultar contraseña" @onclick="TogglePasswordVisibility" style="display: @(showPassword ? "none" : "block")" />
+                        <InputText @bind-Value="credenciales.Clave"  placeholder="Ingresa tu contraseña" class="inp parr"/>
                 </div>
             </div>
-
+           
         </section>
 
-        <button @onclick="Aunth" class="bton bton-black" type="submit">Iniciar Sesión</button>
+            <button class="bton bton-black" >Iniciar Sesión</button>
+        </EditForm>
     </section>
     <p class="center">¿Aun no tienes una cuenta? <span @onclick="createAccount" class="t16" style="cursor:pointer;">Crear una</span> </p>
 
@@ -44,18 +46,26 @@
         navManager.NavigateTo("/register");
     }
 
-    private void Aunth()
+    Credenciales credenciales = new Credenciales();
+
+    private async Task Autenticar()
     {
-        navManager.NavigateTo("/home");
+        // Logica
+        Usuario usuario = await usuarioService.Autenticar(credenciales);
+        if (usuario.UsuarioId > 0)
+        {
+            // Credenciales correctas
+
+            // Guardar dato localmente en el navegador/webview
+            await jsRuntime.InvokeVoidAsync("localStorage.setItem", "UsuarioId", usuario.UsuarioId);
+
+            // Navegar
+            navManager.NavigateTo("/home");
+        }
+        else
+        {
+            // Credenciales incorrectas
+        }
     }
 
-    private bool showPassword = false;
-    private string inputType = "password";
-    private ElementReference passwordInput;
-
-    private void TogglePasswordVisibility()
-    {
-        showPassword = !showPassword;
-        inputType = showPassword ? "text" : "password";
-    }
 }
