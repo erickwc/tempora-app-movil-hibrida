@@ -122,14 +122,13 @@
 
 
         estados = await estadoService.ObtenerTodos();
-
     }
 
     private async Task Buscar()
     {
         if(periodo.EstadoId > 0 || !string.IsNullOrWhiteSpace(periodo.Nombre))
         {
-            periodos = await periodoService.Buscar(periodo);
+            periodos = await periodoService.Buscar(periodo, usuarioId);
         }
         else
         {

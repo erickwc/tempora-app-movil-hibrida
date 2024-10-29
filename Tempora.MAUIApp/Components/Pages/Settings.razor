@@ -1,5 +1,10 @@
 ﻿@page "/settings"
 @inject NavigationManager navManager
+@inject UsuarioService usuarioService
+@inject PeriodoService periodoService
+@inject EstadoService estadoService
+@inject IJSRuntime jsRuntime
+
 
 <main>
     <section class="mt-4" style="gap:16px; display:flex; align-items:center; justify-content:space-between;">
@@ -13,8 +18,8 @@
 
 <section class="d-grid" style=" height:80vh; place-items:center;">
     <section class="d-grid text-center" style="gap:8px;">
-        <h2 class="t16">Erick caceres</h2>
-        <p class="parr">235 horas acumuladas • 2 periodos</p>
+        <h2 class="t16">@nombre</h2>
+        <p class="parr">@horas</p>
         <button @onclick="Profile" style="justify-content:space-evenly;" class="bton bton-black">Editar perfil</button>
     </section>
 </section>
@@ -33,6 +38,19 @@
     private void Account()
     {
         navManager.NavigateTo("/account");
+    }
+
+    int usuarioId;
+    private string nombre;
+    private string horas;
+
+    protected override async Task OnInitializedAsync()
+    {
+        string dato = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "UsuarioId");
+        usuarioId = Convert.ToInt32(dato);
+
+        nombre = await usuarioService.ObtenerNombrePorId(usuarioId);
+        horas = await periodoService.ObtenerTotalHorasRealizadas(usuarioId);
     }
 
 }
