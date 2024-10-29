@@ -30,7 +30,7 @@ namespace Tempora.MAUIApp
             builder.Services.AddScoped<UsuarioService>();
             builder.Services.AddScoped<DiaService>();
             builder.Services.AddScoped<PeriodoService>();
-            builder.Services.AddScoped<Estado>();
+            builder.Services.AddScoped<EstadoService>();
 
             return builder.Build();
         }

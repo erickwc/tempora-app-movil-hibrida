@@ -42,7 +42,8 @@
                         </div>
                     </div>
 
-                    <div class="grid d-none" style="gap:10px;">
+                    <div class="d-none">
+                    <div class="grid" style="gap:10px;">
                         <label>Id Estado</label>
                         <div class="inp-cont">
                             <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
@@ -50,7 +51,7 @@
                         </div>
                     </div>
 
-                    <div class="grid d-none" style="gap:10px;">
+                    <div class="grid" style="gap:10px;">
                         <label>Id Usuario</label>
                         <div class="inp-cont">
                             <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
@@ -58,7 +59,7 @@
                         </div>
                     </div>
 
-                    <div class="grid d-none" style="gap:10px;">
+                    <div class="grid" style="gap:10px;">
                         <label>Horas Realizadas</label>
                         <div class="inp-cont">
                             <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
@@ -66,7 +67,7 @@
                         </div>
                     </div>
 
-                    <div class="grid d-none" style="gap:10px;">
+                    <div class="grid" style="gap:10px;">
                         <label>Horas Pendientes</label>
                         <div class="inp-cont">
                             <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
@@ -74,12 +75,28 @@
                         </div>
                     </div>
 
+                    <div class="grid" style="gap:10px;">
+                        <label>Horas registro</label>
+                        <div class="inp-cont">
+                            <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                            <input type="text" placeholder="Ingresa las horas pendientes" class="inp parr" @bind="@periodo.HorasPendientes" />
+                        </div>
+                    </div>
+                    </div>
+                    
+                    <div class="grid" style="gap:10px;">
+                        <label>Hora de registro</label>
+                        <div class="inp-cont">
+                            <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                            <input type="datetime" placeholder="Ingresa las horas pendientes" class="inp parr" @bind="@periodo.HoraRegistro" />
+                        </div>
+                    </div>
                 </section>
                 </section>
             </section>
         </section>
 
-        <button @onclick="Regresar" class="bton bton-black" style="margin-bottom:24px;" type="submit">Guardar cambios</button>
+    <button @onclick="EditarPeriodo" class="bton bton-black" style="margin-bottom:24px;" type="submit">Guardar cambios</button>
     </main>
 
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -117,5 +134,11 @@
     {
         await periodoService.Eliminar(periodoId);
         navManager.NavigateTo("/home");
+    }
+
+    private async Task EditarPeriodo()
+    {
+        await periodoService.Editar(periodo); // Llama al método Editar para actualizar el periodo
+        navManager.NavigateTo("/home"); // Navega a la página de inicio después de guardar
     }
 }

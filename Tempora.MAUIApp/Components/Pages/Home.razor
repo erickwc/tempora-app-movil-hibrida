@@ -2,6 +2,7 @@
 @inject NavigationManager navManager
 @inject UsuarioService usuarioService
 @inject PeriodoService periodoService
+@inject EstadoService estadoService
 @inject IJSRuntime jsRuntime
 
 <main style="gap:24px; display:flex; flex-direction:column; height:100vh;">
@@ -19,16 +20,17 @@
     <section>
         <div class="inp-cont">
             <img class="ico-inp left" src="/Images/search.svg" alt="Alternate Text" />
-            <input placeholder="Busca un periodo por el nombre" class="inp parr" type="text" name="name" value="" />
+            <input @bind="periodo.Nombre" @bind:event="oninput" @onkeyup="Buscar" placeholder="Busca un periodo por el nombre" class="inp parr" type="text" />
         </div>
     </section>
 
     <section class="d-flex" style="gap:8px;">
         <p class="parr">Tipo: </p>
-        <select class="select">
-            <option value="value">Todos</option>
-            <option value="value">Finalizados</option>
-            <option value="value">Pendientes</option>
+        <select @bind="periodo.EstadoId" @bind:event="oninput" @onchange="Buscar" class="select">
+            @foreach (var item in estados)
+            {
+                <option value="@item.EstadoId">@item.Nombre</option>
+            }
         </select>
     </section>
 
@@ -47,7 +49,7 @@
                         <p class="status">
                             @(periodo.EstadoId == 2 ? "Pendiente" : periodo.EstadoId == 1 ? "Finalizado" : "Desconocido")
                         </p>
-                        <span @onclick:stopPropagation @onclick="() => EditarPeriodo(periodo.PeriodoId)" class="bton-card">
+                        <span @onclick="() => EditarPeriodo(periodo.PeriodoId)" @onclick:stopPropagation class="bton-card">
                             <img src="/Images/sttngcard.svg" alt="Alternate Text" />
                         </span>
                     </div>
@@ -79,6 +81,9 @@
     private string nombre;
     private string fechaHoraActual;
     private List<Periodo> periodos = new List<Periodo>();
+    private List<Estado> estados = new List<Estado>();
+    Periodo periodo = new Periodo();
+
 
     private int CalcularProgreso(string horasRealizadas)
     {
@@ -114,6 +119,22 @@
 
         // Llama al método para obtener los periodos del usuario
         periodos = await periodoService.BuscarPorUsuarioId(usuarioId);
+
+
+        estados = await estadoService.ObtenerTodos();
+
+    }
+
+    private async Task Buscar()
+    {
+        if(periodo.EstadoId > 0 || !string.IsNullOrWhiteSpace(periodo.Nombre))
+        {
+            periodos = await periodoService.Buscar(periodo);
+        }
+        else
+        {
+            periodos = await periodoService.BuscarPorUsuarioId(usuarioId);
+        }
     }
 
     protected override void OnInitialized()
@@ -126,6 +147,7 @@
             InvokeAsync(StateHasChanged);
         };
         timer.Start();
+        
     }
 
     private void ActualizarFechaHora()
@@ -153,4 +175,7 @@
     {
         navManager.NavigateTo("/settings");
     }
+
+    
+   
 }

@@ -54,23 +54,9 @@ namespace Tempora.MAUIApp.Services
         }
 
         // GET: api/Periodo/search?estadoId=1&nombre=example
-        public async Task<List<Periodo>> Buscar(byte? estadoId = null, string? nombre = null)
+        public async Task<List<Periodo>> Buscar(Periodo periodo)
         {
-            string url = $"{_endPoint}/search";
-
-            if (estadoId.HasValue || !string.IsNullOrWhiteSpace(nombre))
-            {
-                var query = new List<string>();
-
-                if (estadoId.HasValue)
-                    query.Add($"estadoId={estadoId}");
-
-                if (!string.IsNullOrWhiteSpace(nombre))
-                    query.Add($"nombre={nombre}");
-
-                url += "?" + string.Join("&", query);
-            }
-
+            string url = $"{_endPoint}/search?estadoId={periodo.EstadoId}&nombre=={periodo.Nombre}";
             return await _http.GetFromJsonAsync<List<Periodo>>(url) ?? new List<Periodo>();
         }
 
