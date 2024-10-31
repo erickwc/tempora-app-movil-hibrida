@@ -24,7 +24,7 @@ namespace Tempora.MAUIApp
 #endif
 
             builder.Services.AddScoped(http => new HttpClient{
-                BaseAddress = new Uri("http://localhost:5273/")
+                BaseAddress = new Uri("https://localhost:7174/")
             });
 
             builder.Services.AddScoped<UsuarioService>();

@@ -27,6 +27,7 @@
     <section class="d-flex" style="gap:8px;">
         <p class="parr">Tipo: </p>
         <select @bind="periodo.EstadoId" @bind:event="oninput" @onchange="Buscar" class="select">
+            <option value="0">Todos</option>
             @foreach (var item in estados)
             {
                 <option value="@item.EstadoId">@item.Nombre</option>
@@ -59,8 +60,10 @@
                             <p class="parr">@periodo.FechaRegistro.ToString("d 'de' MMMM yyyy")</p>
                         </div>
                         <div>
-                            <p style="text-align:end;" class="parr">@periodo.HorasPendientes horas restantes</p>
-                            <progress value="@CalcularProgreso(periodo.HorasRealizadas)" max="100"></progress>
+                            <p style="text-align:end;" class="parr">
+                                @(periodo.HorasPendientes.Contains(" ") ? periodo.HorasPendientes : $"{periodo.HorasPendientes} horas y 0 minutos restantes")
+                            </p>
+                            <progress value="@(periodo.EstadoId == 1 ? 100 : CalcularProgreso(periodo.HorasRealizadas))" max="100"></progress>
                         </div>
                     </div>
                 </section>
@@ -117,9 +120,7 @@
 
         nombre = await usuarioService.ObtenerNombrePorId(usuarioId);
 
-        // Llama al método para obtener los periodos del usuario
         periodos = await periodoService.BuscarPorUsuarioId(usuarioId);
-
 
         estados = await estadoService.ObtenerTodos();
     }

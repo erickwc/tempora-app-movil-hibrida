@@ -209,7 +209,7 @@ h1:focus {
 }
 
 
-input[type="date"]::-webkit-calendar-picker-indicator {
+/*input[type="date"]::-webkit-calendar-picker-indicator {
     display: none; 
 }
 
@@ -217,9 +217,9 @@ input[type="date"] {
     -webkit-appearance: none; 
     -moz-appearance: textfield; 
     appearance: textfield; 
-}
+}*/
 
-input[type="time"]::-webkit-inner-spin-button,
+/*input[type="time"]::-webkit-inner-spin-button,
 input[type="time"]::-webkit-calendar-picker-indicator {
     display: none; 
 }
@@ -228,7 +228,7 @@ input[type="time"] {
     -webkit-appearance: none;
     -moz-appearance: textfield;
     appearance: textfield; 
-}
+}*/
 
 
 

@@ -1,5 +1,6 @@
-﻿@page "/days"
+﻿@page "/days/{periodoId:int}"
 @inject NavigationManager navManager
+@inject DiaService diaService
 
 <main style="gap:24px; display:flex; flex-direction:column; height:100vh;">
     <section class="mt-4" style="gap:16px; display:flex; align-items:center;">
@@ -13,7 +14,7 @@
     <section>
         <div class="inp-cont">
             <img class="ico-inp left" src="/Images/search.svg" alt="Alternate Text" />
-            <input placeholder="Busca un dia por su fecha" class="inp parr" type="text" name="name" value="" />
+            <input placeholder="Busca un día por su fecha" class="inp parr" type="date" @onchange="BuscarPorFecha" />
         </div>
     </section>
 
@@ -21,30 +22,61 @@
         <h2 class="t20">Días</h2>
         <p class="parr" style="font-size:14px;">2 dias registrados - 13:30 horas</p>
     </section>
-    <section>
+    <section class="d-grid" style="gap:16px; padding-bottom:100px; z-index:2; position: relative;">
 
-        <section class="card-period d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center" style="gap:20px;">
-                <div>
-                    <img style="padding:8px; background:white; border-radius:8px;" src="/Images/day.svg" alt="Alternate Text" />
-                </div>
-                <div class="grid" style="gap:8px;">
-                    <h3 class="t16">17/20/2024</h3>
-                    <p class="parr">8 horas realizadas</p>
-                </div>
-            </div>
-                <div>
-                    <button @onclick="EditDay" class="bton" style="background:white; color:black;">Editar</button>
-                </div>
-        </section>
+        @if (dia.Count > 0)
+        {
+            @foreach (var (item, index) in dia.Select((value, i) => (value, i)))
+            {
+                <section class="card-period d-flex justify-content-between align-items-center" style="background-color:@GetBackgroundColor(index);">
+                    <div class="d-flex align-items-center" style="gap:20px;">
+                        <div>
+                            <img style="padding:8px; background:white; border-radius:8px;" src="/Images/day.svg" alt="Alternate Text" />
+                        </div>
+                        <div class="grid" style="gap:8px;">
+                            <h3 class="t16">@item.Fecha.ToString("dd/MM/yyyy")</h3>
+                            <p class="parr">@item.HorasTotales horas realizadas</p>
+                        </div>
+                    </div>
+                    <div>
+                        <button @onclick="() => EditDay(item.DiaId)" class="bton" style="background:white; color:black;">Editar</button>
+                    </div>
+                </section>
+
+            }
+
+
+        }
+        else
+        {
+            <p>No hay días registrados.</p>
+        }
 
     </section>
+    <button @onclick="() => NewDay()" style="z-index:3; position: fixed; bottom: 24px; left: 24px; right: 24px; width: calc(100% - 48px);" class="bton bton-black" type="submit">Agregar nuevo día</button>
 
-    <button @onclick="NewDay" style="position: fixed; bottom: 24px; left: 24px; right: 24px; width: calc(100% - 48px);" class="bton bton-black" type="submit">Agregar nuevo día</button>
 
 </main>
 
 @code {
+
+    private string[] colores = { "#FBF0FF", "#EBFFFB", "#FDF6E3", "#F0F4FF" };
+
+    private string GetBackgroundColor(int index)
+    {
+        return colores[index % colores.Length];
+    }
+
+    [Parameter]
+    public int periodoId { get; set; }
+    private DateTime? fechaSeleccionada;
+    private List<Dia> dia = new List<Dia>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        dia = await diaService.BuscarPorPeriodoId(periodoId);
+    }
+
     private void Home()
     {
         navManager.NavigateTo("/home");
@@ -52,11 +84,47 @@
 
     private void NewDay()
     {
-        navManager.NavigateTo("/newday");
+        navManager.NavigateTo($"/newday/{periodoId}");
     }
 
-    private void EditDay()
+    private void EditDay(long diaId)
     {
-        navManager.NavigateTo("/editday");
+        navManager.NavigateTo($"/editday/{diaId}");
     }
+
+    private async Task BuscarPorFecha(ChangeEventArgs e)
+    {
+        // Intenta convertir el valor de la entrada a una fecha
+        if (DateTime.TryParse(e.Value?.ToString(), out var fecha))
+        {
+            fechaSeleccionada = fecha;
+
+            try
+            {
+                // Busca días por la fecha seleccionada y el ID del período
+                dia = await diaService.BuscarPorFechaYPeriodo(fechaSeleccionada.Value, periodoId);
+
+                // Verifica si no se encontraron días
+                if (dia == null || !dia.Any())
+                {
+                    dia = new List<Dia>(); // Inicializa una lista vacía para evitar excepciones en la vista
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejo de errores: puedes loguear el error aquí si es necesario
+                // _logger.LogError(ex, "Error al buscar días por fecha.");
+
+                // Muestra un mensaje de error al usuario si es necesario
+                dia = new List<Dia>(); // Asegúrate de que `dia` siempre sea una lista
+            }
+        }
+        else
+        {
+            // Si la conversión falla, busca todos los días por el ID del período
+            dia = await diaService.BuscarPorPeriodoId(periodoId);
+        }
+    }
+
+    
 }

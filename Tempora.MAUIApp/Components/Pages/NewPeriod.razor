@@ -34,7 +34,7 @@
                        @onchange="(e) =>
                {
                    periodo.CantidadHoras = int.Parse(e.Value.ToString());
-                   periodo.HorasPendientes = e.Value.ToString(); // Asignar el valor de CantidadHoras a HorasPendientes
+                   periodo.HorasPendientes = e.Value.ToString(); 
                }" />
             </div>
         </div>
@@ -90,6 +90,7 @@
 
     int usuarioId;
     Periodo periodo = new Periodo();
+
 
     protected override async Task OnInitializedAsync()
     {

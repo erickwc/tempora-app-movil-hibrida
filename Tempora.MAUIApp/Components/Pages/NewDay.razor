@@ -1,5 +1,6 @@
-﻿@page "/newday"
+﻿@page "/newday/{periodoId:int}"
 @inject NavigationManager navManager
+@inject DiaService diaService
 
 <main style="gap:24px; display:flex; flex-direction:column; justify-content:space-between; height:100vh;">
 
@@ -22,12 +23,15 @@
 
                 <section class="grid" style="gap:24px;">
                     <div class="grid" style="gap:10px;">
+                        <label>Fecha de Actividad</label>
                         <div class="inp-cont">
                             <img class="ico-inp left" src="/Images/date.svg" alt="Alternate Text" />
-                            <input placeholder="Ingresa el nombre" class="inp parr" type="date" name="name" value="" />
+                            <input type="date" class="inp parr" @onchange="(e) => dia.Fecha = DateTime.Parse(e.Value.ToString())" />
                         </div>
                     </div>
                 </section>
+
+               
             </div>
 
             <div class="d-grid" style="gap:24px;">
@@ -44,7 +48,10 @@
                         <label>Hora de inicio</label>
                         <div class="inp-cont">
                             <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
-                            <input placeholder="Ingresa la hora" class="inp parr" type="time" name="name" value="" />
+                            <input placeholder="Ingresa la hora" class="inp parr" type="time"
+                                   @onchange="(e) => {
+                                     dia.HoraInicioManana = TimeSpan.Parse(e.Value.ToString());
+                                    CalcularHorasTotales();}" />
                         </div>
                     </div>
 
@@ -52,7 +59,11 @@
                         <label>Hora de finalización</label>
                         <div class="inp-cont">
                             <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
-                            <input placeholder="Ingresa la hora" class="inp parr" type="time" name="name" value="" />
+                            <input placeholder="Ingresa la hora" class="inp parr" type="time"
+                                   @onchange="(e) => {
+           dia.HoraFinManana = TimeSpan.Parse(e.Value.ToString());
+           CalcularHorasTotales();
+       }" />
                         </div>
                     </div>
                 </section>
@@ -64,12 +75,15 @@
                 </section>
 
                 <section class="d-grid" style="gap:24px; grid-template-columns:1fr 1fr;">
-                    
                     <div class="grid" style="gap:10px; width:100%;">
                         <label>Hora de inicio</label>
                         <div class="inp-cont">
                             <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
-                            <input placeholder="Ingresa la hora" class="inp parr" type="time" name="name" value="" />
+                            <input placeholder="Ingresa la hora" class="inp parr" type="time"
+                                   @onchange="(e) => {
+           dia.HoraInicioTarde = TimeSpan.Parse(e.Value.ToString());
+           CalcularHorasTotales();
+       }" />
                         </div>
                     </div>
 
@@ -77,23 +91,40 @@
                         <label>Hora de finalización</label>
                         <div class="inp-cont">
                             <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
-                            <input placeholder="Ingresa la hora" class="inp parr" type="time" name="name" value="" />
+                            <input placeholder="Ingresa la hora" class="inp parr" type="time"
+                                   @onchange="(e) => {
+           dia.HoraFinTarde = TimeSpan.Parse(e.Value.ToString());
+           CalcularHorasTotales();
+       }" />
                         </div>
                     </div>
-
                 </section>
             </div>
 
-           
-                <div>
-                    <p> <span class="t16">Total de horas realizadas:</span> <span class="parr">8 horas</span> </p>
+
+            <div class="grid" style="gap:10px; width:100%;">
+                <label>Total de horas</label>
+                <div class="inp-cont">
+                    <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                    <input placeholder="Ingresa el total de horas" class="inp parr" value="@dia.HorasTotales" readonly />
                 </div>
+            </div>
+
+
+            <div class="grid d-none" style="gap:10px; width:100%; pointer-events:none;">
+                <label>Id Periodo</label>
+                <div class="inp-cont">
+                    <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
+                    <input placeholder="Ingresa el Id del periodo" class="inp parr" type="number"
+                           value="@dia.PeriodoId" @onchange="(e) => dia.PeriodoId = int.Parse(e.Value.ToString())" />
+                </div>
+            </div>
 
 
         </section>
     </section>
 
-    <button @onclick="Regresar" class="bton bton-black" style="margin-bottom:24px;" type="submit">Guardar nuevo día</button>
+    <button @onclick="Guardar" class="bton bton-black" style="margin-bottom:24px; margin-top:48px;">Guardar nuevo día</button>
 
 </main>
 
@@ -113,8 +144,51 @@
 </div>
 
 @code {
+    Dia dia = new Dia();
+
+    [Parameter]
+    public int periodoId { get; set; }
+
+    protected async Task Guardar()
+    {
+        // Asegúrate de que las horas de la mañana y de la tarde no sean null
+        dia.HoraInicioManana ??= TimeSpan.Zero;
+        dia.HoraFinManana ??= TimeSpan.Zero;
+        dia.HoraInicioTarde ??= TimeSpan.Zero;
+        dia.HoraFinTarde ??= TimeSpan.Zero;
+
+        Dia obj = await diaService.Guardar(dia);
+        Regresar();
+    }
+
+    protected override void OnInitialized()
+    {
+        dia.PeriodoId = periodoId;
+    }
+
     private void Regresar()
     {
-        navManager.NavigateTo("/days");
+        navManager.NavigateTo($"/days/{periodoId}");
+    }
+
+    private void CalcularHorasTotales()
+    {
+        // Inicializa las horas de la mañana y de la tarde como TimeSpan.Zero si son nulas
+        TimeSpan horaInicioManana = dia.HoraInicioManana ?? TimeSpan.Zero;
+        TimeSpan horaFinManana = dia.HoraFinManana ?? TimeSpan.Zero;
+        TimeSpan horaInicioTarde = dia.HoraInicioTarde ?? TimeSpan.Zero;
+        TimeSpan horaFinTarde = dia.HoraFinTarde ?? TimeSpan.Zero;
+
+        TimeSpan horasManana = horaFinManana - horaInicioManana;
+        TimeSpan horasTarde = horaFinTarde - horaInicioTarde;
+
+        // Asegúrate de que no se vuelva negativo
+        if (horasManana < TimeSpan.Zero) horasManana = TimeSpan.Zero;
+        if (horasTarde < TimeSpan.Zero) horasTarde = TimeSpan.Zero;
+
+        TimeSpan totalHoras = horasManana + horasTarde;
+
+        dia.HorasTotales = totalHoras.ToString(@"h\:mm"); // Formato "h:mm"
     }
 }
+
