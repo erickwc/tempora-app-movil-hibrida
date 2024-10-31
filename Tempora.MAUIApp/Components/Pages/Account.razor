@@ -1,8 +1,9 @@
 ﻿@page "/account"
 @inject NavigationManager navManager
+@inject UsuarioService usuarioService
+@inject IJSRuntime jsRuntime
 
 <main style="gap:24px; display:flex; flex-direction:column; justify-content:space-between; height:100vh;">
-
     <section class="d-grid" style="gap:48px;">
         <section class="mt-4" style="gap:16px; display:flex; align-items:center; justify-content:space-between;">
             <button @onclick="Settings" class="btn-goback"> <img src="/Images/back.svg" alt="Alternate Text" /> </button>
@@ -12,37 +13,38 @@
             <button style="opacity:0; pointer-events:none;" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn-goback"> <img src="/Images/delete.svg" alt="Alternate Text" /> </button>
         </section>
 
-
         <section class="d-grid" style="gap:56px;">
             <section class="d-grid" style="gap:16px;">
                 <h2 class="t16">Cerrar Sesión</h2>
-                <p class="parr">Puedes salir de tu cuenta para volver a entrar mas tarde</p>
-                <button data-bs-toggle="modal" data-bs-target="#staticBackdrop"  class="bton" style="margin-bottom:24px;  width:150px;" type="submit">Cerrar Sesión</button>
+                <p class="parr">Puedes salir de tu cuenta para volver a entrar más tarde</p>
+                <button data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="bton" style="margin-bottom:24px; width:150px;" type="submit">Cerrar Sesión</button>
             </section>
             <section class="d-grid" style="gap:16px;">
                 <h2 class="t16">Eliminar cuenta</h2>
-                <p class="parr">Si eliminas tu cuenta perderas toda tu informacion registrada hasta el momento</p>
-                <button data-bs-target="#exampleModalToggle" data-bs-toggle="modal" style="width:250px;" class="bton bton-black">Quiero eliminar mi cuenta</button>
+                <p class="parr">Si eliminas tu cuenta perderás toda tu información registrada hasta el momento</p>
+                <button data-bs-toggle="modal" data-bs-target="#exampleModalToggle" style="width:250px;" class="bton bton-black">Quiero eliminar mi cuenta</button>
             </section>
         </section>
     </section>
 </main>
 
+<!-- Modal para Confirmar Cerrar Sesión -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content d-grid" style="padding:32px 16px; gap:24px; border-radius:24px; margin:0px 16px;">
             <div class="d-grid" style="gap:8px;">
-                <h2 class="t20 center">¿Estas seguro de salir?</h2>
-                <p class="parr center">Deberas volver a ingresar tu telefono y contraseña para iniciar sesión.</p>
+                <h2 class="t20 center">¿Estás seguro de salir?</h2>
+                <p class="parr center">Deberás volver a ingresar tu teléfono y contraseña para iniciar sesión.</p>
             </div>
             <div class="d-grid" style="gap:8px;">
-                <button data-bs-dismiss="modal" aria-label="Close" @onclick="Login" class="bton bton-black">Si, quiero cerrar sesión</button>
+                <button data-bs-dismiss="modal" aria-label="Close" @onclick="Login" class="bton bton-black">Sí, quiero cerrar sesión</button>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close" class="bton bton-white">Cancelar</button>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Modal para Confirmar Eliminación -->
 <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content d-grid" style="padding:32px 16px; gap:24px; border-radius:24px; margin:0px 16px;">
@@ -51,32 +53,56 @@
                 <p class="parr center">Esta acción es irreversible. Si decides eliminar tu cuenta, perderás toda la información de tus periodos y fechas registradas. ¿Estás seguro de continuar?</p>
             </div>
             <div class="d-grid" style="gap:8px;">
-                <button data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" class="bton bton-black">Si, quiero eliminar mi cuenta</button>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close" class="bton bton-white">Cancelar</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content d-grid" style="padding:32px 16px; gap:24px; border-radius:24px; margin:0px 16px;">
-            <div class="d-grid" style="gap:8px;">
-                <h2 class="t20 center">Ingresa tu contraseña</h2>
-                <p class="parr center">Para confirmar esta accion ingresa tu contraseña</p>
-                <div class="inp-cont">
-                    <img class="ico-inp left" src="/Images/pass.svg" alt="Alternate Text" />
-                    <input placeholder="Ingresa tu contraseña" class="inp parr" type="text" name="name" value="" />
-                </div>
-            </div>
-            <div class="d-grid" style="gap:8px;">
-                <button @onclick="Login" data-bs-dismiss="modal" aria-label="Close" class="bton bton-black">Confirmar eliminación</button>
+                <button data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" class="bton bton-black">Sí, quiero eliminar mi cuenta</button>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close" class="bton bton-white">Cancelar</button>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Modal para Confirmar Contraseña -->
+<div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content d-grid" style="padding:32px 16px; gap:24px; border-radius:24px; margin:0px 16px;">
+            <div class="d-grid" style="gap:16px;">
+                <div class="d-grid" style="gap:8px;">
+                    <h2 class="t20 center">Ingresa tu contraseña</h2>
+                    <p class="parr center">Para confirmar esta acción ingresa tu contraseña</p>
+                </div>
+
+                <div class="d-grid" style="gap:8px;">
+                    <div class="inp-cont">
+                        <img class="ico-inp left" src="/Images/phone.svg" alt="Teléfono" />
+                        <input placeholder="Ingresa tu teléfono" class="inp parr" type="text" @bind="@usuario.Telefono" readonly />
+                    </div>
+
+                    <div class="inp-cont">
+                        <img class="ico-inp left" src="/Images/pass.svg" alt="Contraseña" />
+                        <input placeholder="Ingresa tu contraseña" class="inp parr" type="password" @bind="@credenciales.Clave" />
+                    </div>
+                </div>
+                @if (!isPasswordValid)
+                {
+                    <p class="text-danger">Contraseña incorrecta</p>
+                }
+            </div>
+            <div class="d-grid" style="gap:8px;">
+                <button @onclick="EliminarCuenta"  class="bton bton-black">Confirmar eliminación</button>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close" class="bton bton-white">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p>@usuario.Telefono</p>
+
 @code {
+    Usuario usuario = new Usuario();
+    int usuarioId;
+    Credenciales credenciales = new Credenciales();
+    bool isPasswordValid = true; // Variable para manejar la validez de la contraseña
+    string mensaje = string.Empty;
+
     private void Regresar()
     {
         navManager.NavigateTo("/home");
@@ -90,5 +116,49 @@
     private void Login()
     {
         navManager.NavigateTo("/login");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        string dato = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "UsuarioId");
+        usuarioId = Convert.ToInt32(dato);
+        usuario = await usuarioService.ObtenerPorId(usuarioId);
+
+        credenciales.Telefono = usuario.Telefono;
+    }
+
+    private async Task EliminarCuenta()
+    {
+        // Autenticar antes de eliminar la cuenta
+        isPasswordValid = await Autenticar(credenciales); // Almacena el resultado en la variable
+
+        if (isPasswordValid)
+        {
+            // Si la autenticación es exitosa, eliminar la cuenta
+            await usuarioService.Eliminar(usuarioId);
+            await jsRuntime.InvokeVoidAsync("localStorage.removeItem", "UsuarioId");
+            navManager.NavigateTo("/login"); // Redirige a la página de inicio de sesión
+        }
+        else
+        {
+            mensaje = "Error";
+        }
+    }
+
+    private async Task<bool> Autenticar(Credenciales credenciales)
+    {
+        // Lógica de autenticación
+        Usuario usuarioAutenticado = await usuarioService.Autenticar(credenciales);
+        if (usuarioAutenticado.UsuarioId > 0)
+        {
+            // Credenciales correctas
+            await jsRuntime.InvokeVoidAsync("localStorage.setItem", "UsuarioId", usuarioAutenticado.UsuarioId);
+            return true; // Autenticación exitosa
+        }
+        else
+        {
+            mensaje = "Error";
+            return false; // Credenciales incorrectas
+        }
     }
 }

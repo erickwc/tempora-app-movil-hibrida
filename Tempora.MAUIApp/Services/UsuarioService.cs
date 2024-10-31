@@ -26,13 +26,18 @@ namespace Tempora.MAUIApp.Services
 
             HttpResponseMessage response = await _http.PostAsJsonAsync(url, credenciales);
 
-            var content = await response.Content.ReadAsStringAsync();
-            Usuario obj = JsonSerializer.Deserialize<Usuario>(content, new JsonSerializerOptions
+            if (response.IsSuccessStatusCode)
             {
-                PropertyNameCaseInsensitive = true
-            }) ?? new Usuario();
+                var content = await response.Content.ReadAsStringAsync();
+                Usuario obj = JsonSerializer.Deserialize<Usuario>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                }) ?? new Usuario();
 
-            return obj;
+                return obj;
+            }
+
+            return new Usuario();
         }
 
         // GET: api/Usuario
@@ -75,7 +80,6 @@ namespace Tempora.MAUIApp.Services
         // POST: api/Usuario
         public async Task<Usuario> Guardar(Usuario usuario)
         {
-            usuario.Clave = BCrypt.Net.BCrypt.HashPassword(usuario.Clave);
             HttpResponseMessage response = await _http.PostAsJsonAsync(_endPoint, usuario);
             var content = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<Usuario>(content) ?? new Usuario();

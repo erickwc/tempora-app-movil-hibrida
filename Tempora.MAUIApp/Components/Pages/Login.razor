@@ -7,40 +7,44 @@
 
     <section class="center grid" style="gap:16px;">
         <h1 class="t32">Inicia Sesión</h1>
-        <p class="parr">Ingresa tu numero de telefono y contraseña para entrar a tu cuenta</p>
+        <p class="parr">Ingresa tu número de teléfono y contraseña para entrar a tu cuenta</p>
     </section>
 
     <section class="grid" style="gap:44px;">
         <EditForm Model="credenciales" OnValidSubmit="Autenticar">
-        <section class="grid" style="gap:24px;">
-           
-            <div class="grid" style="gap:10px;">
-                <label>Telefono</label>
-                <div class="inp-cont">
-                    <img class="ico-inp left" src="/Images/phone.svg" alt="Alternate Text" />
-                        <InputText @bind-Value="credenciales.Telefono" placeholder="Ingresa tu numero de telefono" class="inp parr" />
+            <section class="grid" style="gap:24px;">
+                <div class="grid" style="gap:10px;">
+                    <label>Teléfono</label>
+                    <div class="inp-cont">
+                        <img class="ico-inp left" src="/Images/phone.svg" alt="Teléfono" />
+                        <InputText @bind-Value="credenciales.Telefono" placeholder="Ingresa tu número de teléfono" class="inp parr" />
+                    </div>
                 </div>
-            </div>
 
-            <div class="grid" style="gap:10px;">
-                <label>Contraseña</label>
-                <div class="inp-cont">
-                    <img class="ico-inp left" src="/Images/pass.svg" alt="Icono de contraseña" />
-                        <InputText @bind-Value="credenciales.Clave"  placeholder="Ingresa tu contraseña" class="inp parr"/>
+                <div class="grid" style="gap:10px;">
+                    <label>Contraseña</label>
+                    <div class="inp-cont">
+                        <img class="ico-inp left" src="/Images/pass.svg" alt="Icono de contraseña" />
+                        <InputText @bind-Value="credenciales.Clave" placeholder="Ingresa tu contraseña" type="password" class="inp parr" />
+                    </div>
                 </div>
-            </div>
-           
-        </section>
+            </section>
 
-            <button class="bton bton-black" >Iniciar Sesión</button>
+            <button class="bton bton-black">Iniciar Sesión</button>
         </EditForm>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="error-message" style="color: red;">@errorMessage</div>
+        }
     </section>
-    <p class="center">¿Aun no tienes una cuenta? <span @onclick="createAccount" class="t16" style="cursor:pointer;">Crear una</span> </p>
+    <p class="center">¿Aún no tienes una cuenta? <span @onclick="createAccount" class="t16" style="cursor:pointer;">Crear una</span></p>
 
 </main>
 
-
 @code {
+    private string errorMessage; 
+
     private void createAccount()
     {
         navManager.NavigateTo("/register");
@@ -50,21 +54,15 @@
 
     private async Task Autenticar()
     {
-        // Logica
         Usuario usuario = await usuarioService.Autenticar(credenciales);
         if (usuario.UsuarioId > 0)
         {
-            // Credenciales correctas
-
             await jsRuntime.InvokeVoidAsync("localStorage.setItem", "UsuarioId", usuario.UsuarioId);
-
-            // Navegar
             navManager.NavigateTo("/home");
         }
         else
         {
-            // Credenciales incorrectas
+            errorMessage = "La contraseña o el teléfono son incorrectos.";
         }
     }
-
 }
