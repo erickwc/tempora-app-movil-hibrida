@@ -46,12 +46,15 @@ namespace Tempora.MAUIApp.Services
             return await _http.GetFromJsonAsync<List<Dia>>(url) ?? new List<Dia>();
         }
 
-        // GET: api/Dia/SumarHorasTotalesPorPeriodo?periodoId=1
         public async Task<string> SumarHorasTotalesPorPeriodo(int periodoId)
         {
             string url = $"{_endPoint}/sumarhorastotales?periodoId={periodoId}";
-            return await _http.GetStringAsync(url);
+            var response = await _http.GetStringAsync(url);
+
+            // Manejo en caso de que la respuesta sea vacía o no contenga horas
+            return string.IsNullOrEmpty(response) ? "No hay horas registradas para este periodo." : response;
         }
+
 
         // PUT: api/Dia/5
         public async Task Editar(Dia dia)

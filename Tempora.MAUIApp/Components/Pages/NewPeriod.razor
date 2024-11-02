@@ -24,7 +24,13 @@
                 <img class="ico-inp left" src="/Images/add.svg" alt="Alternate Text" />
                 <input type="text" placeholder="Ingresa el nombre" class="inp parr" @onchange="(e) => periodo.Nombre = e.Value.ToString()" />
             </div>
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="error">@errorMessage</div>
+            }
         </div>
+
+      
 
         <div class="grid" style="gap:10px;">
             <label>Cantidad de horas</label>
@@ -37,7 +43,13 @@
                    periodo.HorasPendientes = e.Value.ToString(); 
                }" />
             </div>
+              @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="error">@errorMessage</div>
+        }
         </div>
+
+      
 
         <div class="grid" style="gap:10px;">
             <label>Fecha de inicio</label>
@@ -45,6 +57,10 @@
                 <img class="ico-inp left" src="/Images/date.svg" alt="Alternate Text" />
                 <input type="date" class="inp parr" @onchange="(e) => periodo.FechaRegistro = DateTime.Parse(e.Value.ToString())" />
             </div>
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="error">@errorMessage</div>
+            }
         </div>
         <div class="grid d-none" style="gap:10px;">
             <label>Id Estado</label>
@@ -78,19 +94,22 @@
                        @onchange="(e) => periodo.HorasPendientes = e.Value.ToString()"
                        value="@periodo.HorasPendientes" />
             </div>
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="error">@errorMessage</div>
+            }
+
         </div>
 
+        
         <button @onclick="Guardar" class="bton bton-black">Guardar nuevo periodo</button>
     </section>
 </main>
 
 @code {
-
-    
-
     int usuarioId;
     Periodo periodo = new Periodo();
-
+    private string errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -98,8 +117,8 @@
         usuarioId = Convert.ToInt32(dato);
 
         periodo.UsuarioId = usuarioId;
-        periodo.EstadoId = 2;              
-        periodo.HorasRealizadas = "0";    
+        periodo.EstadoId = 2;
+        periodo.HorasRealizadas = "0";
         periodo.HorasPendientes = "0";
         periodo.HoraRegistro = DateTime.Now.TimeOfDay;
     }
@@ -111,8 +130,31 @@
 
     protected async Task Guardar()
     {
+        errorMessage = string.Empty; // Reiniciar el mensaje de error
+
+        // Llama a la función de validación
+        if (!ValidarCampos())
+        {
+            return; // Si hay un error, se detiene la ejecución
+        }
+
         // Llama al servicio para guardar el periodo
         Periodo obj = await periodoService.Guardar(periodo);
         navManager.NavigateTo("/home");
     }
+
+    private bool ValidarCampos()
+    {
+        // Si algún campo no es válido, asigna el mensaje de error y devuelve falso
+        if (string.IsNullOrWhiteSpace(periodo.Nombre) ||
+            periodo.CantidadHoras <= 0 ||
+            periodo.FechaRegistro == default)
+        {
+            errorMessage = "Ups, aun hay campos vacíos. Completa todos los campos para guardar.";
+            return false;
+        }
+
+        return true; // Todos los campos son válidos
+    }
 }
+

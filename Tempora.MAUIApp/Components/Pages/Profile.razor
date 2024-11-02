@@ -1,8 +1,9 @@
 ﻿@page "/profile"
 @inject NavigationManager navManager
+@inject UsuarioService usuarioService
+@inject IJSRuntime jsRuntime
 
 <main style="gap:24px; display:flex; flex-direction:column; justify-content:space-between; height:100vh;">
-
     <section class="d-grid" style="gap:48px;">
         <section class="mt-4" style="gap:16px; display:flex; align-items:center; justify-content:space-between;">
             <button @onclick="Settings" class="btn-goback"> <img src="/Images/back.svg" alt="Alternate Text" /> </button>
@@ -12,39 +13,44 @@
             <button style="opacity:0; pointer-events:none;" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn-goback"> <img src="/Images/delete.svg" alt="Alternate Text" /> </button>
         </section>
 
-
         <section class="d-grid" style="gap:24px;">
-         
             <section class="grid" style="gap:44px;">
                 <section class="grid" style="gap:24px;">
-
                     <div class="grid" style="gap:10px;">
                         <label>Nombre completo</label>
                         <div class="inp-cont">
                             <img class="ico-inp left" src="/Images/name.svg" alt="Alternate Text" />
-                            <input placeholder="Ingresa tu nombre y un apellido" class="inp parr" type="text" name="name" value="" />
+                            <input placeholder="Ingresa tu nombre y un apellido" class="inp parr" @bind="@usuario.Nombre" type="text" />
                         </div>
                     </div>
 
                     <div class="grid" style="gap:10px;">
-                        <label>Telefono</label>
+                        <label>Teléfono</label>
                         <div class="inp-cont">
                             <img class="ico-inp left" src="/Images/phone.svg" alt="Alternate Text" />
-                            <input placeholder="Ingresa tu numero de telefono" class="inp parr" type="number" name="name" value="" />
+                            <input placeholder="Ingresa tu número de teléfono" class="inp parr" type="tel" @bind="@usuario.Telefono" />
                         </div>
                     </div>
-
                 </section>
-
             </section>
         </section>
     </section>
 
-    <button @onclick="Settings" class="bton bton-black" style="margin-bottom:24px;" type="submit">Guardar cambios</button>
+    @if (!string.IsNullOrEmpty(errorMessageNombre))
+    {
+        <div class="error">@errorMessageNombre</div>
+    }
 
+    <button @onclick="GuardarCambios" class="bton bton-black" style="margin-bottom:24px;" type="submit">Guardar cambios</button>
 </main>
 
 @code {
+    Usuario usuario = new Usuario();
+    int usuarioId;
+
+    private string errorMessageNombre;
+    private string errorMessageTelefono;
+
     private void Regresar()
     {
         navManager.NavigateTo("/home");
@@ -53,5 +59,58 @@
     private void Settings()
     {
         navManager.NavigateTo("/settings");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        string dato = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "UsuarioId");
+        usuarioId = Convert.ToInt32(dato);
+
+        usuario = await usuarioService.ObtenerPorId(usuarioId);
+    }
+
+    private async Task GuardarCambios()
+    {
+        // Reiniciar los mensajes de error
+        errorMessageNombre = string.Empty;
+        errorMessageTelefono = string.Empty;
+
+        // Validar campos
+        if (!ValidarCampos())
+        {
+            return; // Si hay un error, detiene la ejecución
+        }
+
+        bool resultado = await usuarioService.Actualizar(usuarioId, usuario);
+
+        if (resultado)
+        {
+            navManager.NavigateTo("/home");
+        }
+        else
+        {
+            await jsRuntime.InvokeVoidAsync("alert", "No se pudo guardar los cambios. Intenta nuevamente.");
+        }
+    }
+
+    private bool ValidarCampos()
+    {
+        bool esValido = true;
+
+        // Validar Nombre
+        if (string.IsNullOrWhiteSpace(usuario.Nombre))
+        {
+            errorMessageNombre = "¡Ups, no puedes dejar campos vacios en tu perfil";
+            esValido = false;
+        }
+
+        // Validar Teléfono
+        if (string.IsNullOrWhiteSpace(usuario.Telefono))
+        {
+            errorMessageTelefono = "¡Ups, no puedes dejar campos vacios en tu perfil";
+            esValido = false;
+        }
+
+        return esValido; // Retorna verdadero si todos los campos son válidos
     }
 }

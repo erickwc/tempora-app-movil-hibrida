@@ -71,11 +71,16 @@ namespace Tempora.MAUIApp.Services
         }
 
         // PUT: api/Usuario/5
-        public async Task Editar(Usuario usuario)
+        public async Task<bool> Actualizar(int id, Usuario usuario)
         {
-            string url = $"{_endPoint}/{usuario.UsuarioId}";
-            await _http.PutAsJsonAsync(url, usuario);
+            string url = $"{_endPoint}/{id}"; // Construimos la URL para la solicitud PUT
+
+            HttpResponseMessage response = await _http.PutAsJsonAsync(url, usuario); // Enviamos la solicitud
+
+            // Verificamos si la respuesta es exitosa
+            return response.IsSuccessStatusCode;
         }
+
 
         // POST: api/Usuario
         public async Task<Usuario> Guardar(Usuario usuario)

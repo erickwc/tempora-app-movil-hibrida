@@ -1,0 +1,98 @@
+﻿@page "/deleteaccount"
+@inject NavigationManager navManager
+@inject UsuarioService usuarioService
+@inject IJSRuntime jsRuntime
+
+<div class="d-grid" style="gap:16px;">
+    <div class="d-grid" style="gap:8px;">
+        <h2 class="t20 center">Ingresa tu contraseña</h2>
+        <p class="parr center">Para confirmar esta acción ingresa tu contraseña</p>
+    </div>
+
+    <div class="d-grid" style="gap:8px;">
+        <div class="inp-cont">
+            <img class="ico-inp left" src="/Images/phone.svg" alt="Teléfono" />
+            <input placeholder="Ingresa tu teléfono" class="inp parr" type="text" @bind="@usuario.Telefono" readonly />
+        </div>
+
+        <div class="inp-cont">
+            <img class="ico-inp left" src="/Images/pass.svg" alt="Contraseña" />
+            <input placeholder="Ingresa tu contraseña" class="inp parr" type="password" @bind="@credenciales.Clave" />
+        </div>
+    </div>
+    @if (!isPasswordValid)
+    {
+        <p class="text-danger">Contraseña incorrecta</p>
+    }
+</div>
+<div class="d-grid" style="gap:8px;">
+    <button @onclick="EliminarCuenta" class="bton bton-black">Confirmar eliminación</button>
+    <button type="button" data-bs-dismiss="modal" aria-label="Close" class="bton bton-white">Cancelar</button>
+</div>
+
+@code {
+    Usuario usuario = new Usuario();
+    int usuarioId;
+    Credenciales credenciales = new Credenciales();
+    bool isPasswordValid = true; // Variable para manejar la validez de la contraseña
+    string mensaje = string.Empty;
+
+    private void Regresar()
+    {
+        navManager.NavigateTo("/home");
+    }
+
+    private void Settings()
+    {
+        navManager.NavigateTo("/settings");
+    }
+
+    private void Login()
+    {
+        navManager.NavigateTo("/login");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        string dato = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "UsuarioId");
+        usuarioId = Convert.ToInt32(dato);
+        usuario = await usuarioService.ObtenerPorId(usuarioId);
+
+        credenciales.Telefono = usuario.Telefono;
+    }
+
+    private async Task EliminarCuenta()
+    {
+        // Autenticar antes de eliminar la cuenta
+        isPasswordValid = await Autenticar(credenciales); // Almacena el resultado en la variable
+
+        if (isPasswordValid)
+        {
+            // Si la autenticación es exitosa, eliminar la cuenta
+            await usuarioService.Eliminar(usuarioId);
+            await jsRuntime.InvokeVoidAsync("localStorage.removeItem", "UsuarioId");
+            navManager.NavigateTo("/login"); // Redirige a la página de inicio de sesión
+        }
+        else
+        {
+            mensaje = "Error";
+        }
+    }
+
+    private async Task<bool> Autenticar(Credenciales credenciales)
+    {
+        // Lógica de autenticación
+        Usuario usuarioAutenticado = await usuarioService.Autenticar(credenciales);
+        if (usuarioAutenticado.UsuarioId > 0)
+        {
+            // Credenciales correctas
+            await jsRuntime.InvokeVoidAsync("localStorage.setItem", "UsuarioId", usuarioAutenticado.UsuarioId);
+            return true; // Autenticación exitosa
+        }
+        else
+        {
+            mensaje = "Error";
+            return false; // Credenciales incorrectas
+        }
+    }
+}

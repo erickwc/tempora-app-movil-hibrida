@@ -25,7 +25,7 @@
                 <label>Teléfono</label>
                 <div class="inp-cont">
                     <img class="ico-inp left" src="/Images/phone.svg" alt="Icono de teléfono" />
-                    <input placeholder="Ingresa tu número de teléfono" class="inp parr" type="number" @bind="usuario.Telefono" />
+                    <input placeholder="Ingresa tu número de teléfono" class="inp parr" type="tel" @bind="usuario.Telefono" />
                 </div>
             </div>
 
@@ -33,9 +33,17 @@
                 <label>Contraseña</label>
                 <div class="inp-cont">
                     <img class="ico-inp left" src="/Images/pass.svg" alt="Icono de contraseña" />
-                    <input placeholder="Ingresa tu contraseña" class="inp parr" type="@inputTypePassword" @bind="usuario.Clave" />
-                    <img class="ico-inp right" src="/Images/open.svg" alt="Mostrar contraseña" @onclick="TogglePasswordVisibilityPassword" style="display: @(showPassword ? "block" : "none")" />
-                    <img class="ico-inp right" src="/Images/close.svg" alt="Ocultar contraseña" @onclick="TogglePasswordVisibilityPassword" style="display: @(showPassword ? "none" : "block")" />
+                    <input placeholder="Ingresa tu contraseña"
+                           class="inp parr"
+                           type="@inputTypePassword"
+                           @bind="usuario.Clave"
+                           autocomplete="off"
+                           autocorrect="off"
+                           autocapitalize="none" />
+                    <img class="ico-inp right"
+                         src="@(showPassword ? "/Images/open.svg" : "/Images/close.svg")"
+                         alt="@(showPassword ? "Mostrar contraseña" : "Ocultar contraseña")"
+                         @onclick="TogglePasswordVisibilityPassword" />
                 </div>
             </div>
 
@@ -43,22 +51,31 @@
                 <label>Confirmar Contraseña</label>
                 <div class="inp-cont">
                     <img class="ico-inp left" src="/Images/pass.svg" alt="Icono de contraseña" />
-                    <input placeholder="Confirma tu contraseña" class="inp parr" type="@inputTypeConfirmPassword" @bind="confirmPassword" />
-                    <img class="ico-inp right" src="/Images/open.svg" alt="Mostrar contraseña" @onclick="TogglePasswordVisibilityConfirmPassword" style="display: @(showConfirmPassword ? "block" : "none")" />
-                    <img class="ico-inp right" src="/Images/close.svg" alt="Ocultar contraseña" @onclick="TogglePasswordVisibilityConfirmPassword" style="display: @(showConfirmPassword ? "none" : "block")" />
+                    <input placeholder="Confirma tu contraseña"
+                           class="inp parr"
+                           type="@inputTypeConfirmPassword"
+                           @bind="confirmPassword"
+                           autocomplete="off"
+                           autocorrect="off"
+                           autocapitalize="none" />
+                    <img class="ico-inp right"
+                         src="@(showConfirmPassword ? "/Images/open.svg" : "/Images/close.svg")"
+                         alt="@(showConfirmPassword ? "Mostrar contraseña" : "Ocultar contraseña")"
+                         @onclick="TogglePasswordVisibilityConfirmPassword" />
                 </div>
             </div>
 
-            @if (!contraseñasCoinciden)
-            {
-                <p style="color: red;">Las contraseñas no coinciden.</p>
-            }
-
         </section>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="error">@errorMessage</div>
+        }
 
         <button @onclick="Guardar" class="bton bton-black" type="submit">Crear cuenta</button>
     </section>
-    <p class="center">¿Ya tienes una cuenta? <span @onclick="login" class="t16" style="cursor:pointer;">Iniciar Sesión</span> </p>
+
+    <p class="center">¿Ya tienes una cuenta? <span @onclick="login" class="t16" style="cursor:pointer;">Iniciar Sesión</span></p>
 
 </main>
 
@@ -69,7 +86,7 @@
     private bool showConfirmPassword = false;
     private string inputTypePassword = "password";
     private string inputTypeConfirmPassword = "password";
-    private bool contraseñasCoinciden = true;
+    private string errorMessage;
 
     private void login()
     {
@@ -78,20 +95,32 @@
 
     private async Task Guardar()
     {
-        // Verifica si las contraseñas coinciden antes de guardar
-        if (usuario.Clave != confirmPassword)
+        // Reiniciar mensaje de error
+        errorMessage = string.Empty;
+
+        // Validar campos
+        if (string.IsNullOrWhiteSpace(usuario.Nombre) ||
+            string.IsNullOrWhiteSpace(usuario.Telefono) ||
+            string.IsNullOrWhiteSpace(usuario.Clave))
         {
-            contraseñasCoinciden = false; // Cambia a false si no coinciden
-            return;
+            errorMessage = "Ups, aun hay campos vacíos. Completa todos los campos para crear tu cuenta.";
+            return; // Detener la ejecución si hay campos vacíos
         }
 
-        contraseñasCoinciden = true; // Resetea a true si las contraseñas coinciden
+        // Validar coincidencia de contraseñas
+        if (usuario.Clave != confirmPassword)
+        {
+            errorMessage = "Las contraseñas no coinciden.";
+            return; // Detener la ejecución si no coinciden
+        }
+
+        // Guardar el usuario si todas las validaciones son correctas
         await usuarioService.Guardar(usuario);
 
         // Aquí puedes autenticar automáticamente después de crear la cuenta
         var credenciales = new Credenciales
             {
-                Telefono = usuario.Telefono, // Asegúrate de que esto esté configurado correctamente
+                Telefono = usuario.Telefono,
                 Clave = usuario.Clave
             };
 

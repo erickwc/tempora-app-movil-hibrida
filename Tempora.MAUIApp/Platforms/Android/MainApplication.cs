@@ -3,7 +3,7 @@ using Android.Runtime;
 
 namespace Tempora.MAUIApp
 {
-    [Application]
+    [Application(UsesCleartextTraffic = true)]
     public class MainApplication : MauiApplication
     {
         public MainApplication(IntPtr handle, JniHandleOwnership ownership)

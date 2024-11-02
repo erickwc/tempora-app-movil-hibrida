@@ -230,6 +230,19 @@ input[type="time"] {
     appearance: textfield; 
 }*/
 
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+.error {
+    color:red;
+    font-size: 16px;
+    border-radius: 50px;
+    padding:8px 16px;
+    background:#ff00000c;
+    text-align:center;
+}
 
 
 /*buttons*/

@@ -22,14 +22,15 @@
                 </section>
 
                 <section class="grid" style="gap:24px;">
-                    <div class="grid" style="gap:10px;">
+                    <div class="grid" style="gap:10px;"> 
                         <label>Fecha de Actividad</label>
-                        <div class="inp-cont">
+                        <div class="inp-cont" style="display: flex; align-items: center;">
                             <img class="ico-inp left" src="/Images/date.svg" alt="Alternate Text" />
-                            <input type="date" class="inp parr" @onchange="(e) => dia.Fecha = DateTime.Parse(e.Value.ToString())" />
+                            <input type="date" class="inp parr" @bind="dia.Fecha" />
                         </div>
                     </div>
                 </section>
+
 
                
             </div>
@@ -106,7 +107,7 @@
                 <label>Total de horas</label>
                 <div class="inp-cont">
                     <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
-                    <input placeholder="Ingresa el total de horas" class="inp parr" value="@dia.HorasTotales" readonly />
+                    <input placeholder="" class="inp parr" value="@dia.HorasTotales" readonly />
                 </div>
             </div>
 
@@ -123,6 +124,11 @@
 
         </section>
     </section>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="error">@errorMessage</div>
+    }
 
     <button @onclick="Guardar" class="bton bton-black" style="margin-bottom:24px; margin-top:48px;">Guardar nuevo día</button>
 
@@ -143,15 +149,25 @@
     </div>
 </div>
 
+
 @code {
     Dia dia = new Dia();
+    private string errorMessage; // Mensaje de error
 
     [Parameter]
     public int periodoId { get; set; }
 
     protected async Task Guardar()
     {
-        // Asegúrate de que las horas de la mañana y de la tarde no sean null
+        errorMessage = string.Empty; // Reiniciar el mensaje de error
+
+        // Llama a la función de validación
+        if (!ValidarCampos())
+        {
+            return; // Si hay un error, se detiene la ejecución
+        }
+
+        // Asegurarse de que las horas no se guarden como null
         dia.HoraInicioManana ??= TimeSpan.Zero;
         dia.HoraFinManana ??= TimeSpan.Zero;
         dia.HoraInicioTarde ??= TimeSpan.Zero;
@@ -161,9 +177,33 @@
         Regresar();
     }
 
+    private bool ValidarCampos()
+    {
+        // Validar que al menos un turno tenga horas
+        bool tieneTurnoManana = dia.HoraInicioManana.HasValue || dia.HoraFinManana.HasValue;
+        bool tieneTurnoTarde = dia.HoraInicioTarde.HasValue || dia.HoraFinTarde.HasValue;
+
+        if (!tieneTurnoManana && !tieneTurnoTarde)
+        {
+            errorMessage = "Debes ingresar horas en al menos un turno (mañana o tarde).";
+            return false;
+        }
+
+        // Validar que la fecha no sea la por defecto
+        if (dia.Fecha == default)
+        {
+            errorMessage = "La fecha no puede estar vacía. Por favor, selecciona una fecha válida.";
+            return false;
+        }
+
+        return true; // Todos los campos son válidos
+    }
+
     protected override void OnInitialized()
     {
         dia.PeriodoId = periodoId;
+        // Inicializa la fecha con una fecha válida, por ejemplo, hoy
+        dia.Fecha = DateTime.Today;
     }
 
     private void Regresar()
@@ -173,22 +213,19 @@
 
     private void CalcularHorasTotales()
     {
-        // Inicializa las horas de la mañana y de la tarde como TimeSpan.Zero si son nulas
-        TimeSpan horaInicioManana = dia.HoraInicioManana ?? TimeSpan.Zero;
-        TimeSpan horaFinManana = dia.HoraFinManana ?? TimeSpan.Zero;
-        TimeSpan horaInicioTarde = dia.HoraInicioTarde ?? TimeSpan.Zero;
-        TimeSpan horaFinTarde = dia.HoraFinTarde ?? TimeSpan.Zero;
+        TimeSpan horasManana = (dia.HoraFinManana ?? TimeSpan.Zero) - (dia.HoraInicioManana ?? TimeSpan.Zero);
+        TimeSpan horasTarde = (dia.HoraFinTarde ?? TimeSpan.Zero) - (dia.HoraInicioTarde ?? TimeSpan.Zero);
 
-        TimeSpan horasManana = horaFinManana - horaInicioManana;
-        TimeSpan horasTarde = horaFinTarde - horaInicioTarde;
-
-        // Asegúrate de que no se vuelva negativo
         if (horasManana < TimeSpan.Zero) horasManana = TimeSpan.Zero;
         if (horasTarde < TimeSpan.Zero) horasTarde = TimeSpan.Zero;
 
         TimeSpan totalHoras = horasManana + horasTarde;
 
-        dia.HorasTotales = totalHoras.ToString(@"h\:mm"); // Formato "h:mm"
+        dia.HorasTotales = totalHoras.ToString(@"h\:mm");
+    }
+
+    private void SetTodayDate()
+    {
+        dia.Fecha = DateTime.Today;
     }
 }
-

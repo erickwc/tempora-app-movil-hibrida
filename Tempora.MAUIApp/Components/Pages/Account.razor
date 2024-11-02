@@ -45,7 +45,7 @@
 </div>
 
 <!-- Modal para Confirmar Eliminación -->
-<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+<div class="modal fade" id="exampleModalToggle" data-bs-backdrop="static" aria-hidden="true" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content d-grid" style="padding:32px 16px; gap:24px; border-radius:24px; margin:0px 16px;">
             <div class="d-grid" style="gap:8px;">
@@ -61,7 +61,7 @@
 </div>
 
 <!-- Modal para Confirmar Contraseña -->
-<div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+<div class="modal fade" id="exampleModalToggle2" data-bs-backdrop="static" aria-hidden="true" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content d-grid" style="padding:32px 16px; gap:24px; border-radius:24px; margin:0px 16px;">
             <div class="d-grid" style="gap:16px;">
@@ -71,15 +71,16 @@
                 </div>
 
                 <div class="d-grid" style="gap:8px;">
-                    <div class="inp-cont">
+                    <div class="inp-cont d-none">
                         <img class="ico-inp left" src="/Images/phone.svg" alt="Teléfono" />
-                        <input placeholder="Ingresa tu teléfono" class="inp parr" type="text" @bind="@usuario.Telefono" readonly />
+                        <input placeholder="Ingresa tu teléfono" class="inp parr" type="text" @bind="@credenciales.Telefono" readonly />
                     </div>
 
                     <div class="inp-cont">
                         <img class="ico-inp left" src="/Images/pass.svg" alt="Contraseña" />
                         <input placeholder="Ingresa tu contraseña" class="inp parr" type="password" @bind="@credenciales.Clave" />
                     </div>
+
                 </div>
                 @if (!isPasswordValid)
                 {
@@ -101,7 +102,6 @@
     int usuarioId;
     Credenciales credenciales = new Credenciales();
     bool isPasswordValid = true; // Variable para manejar la validez de la contraseña
-    string mensaje = string.Empty;
 
     private void Regresar()
     {
@@ -137,11 +137,11 @@
             // Si la autenticación es exitosa, eliminar la cuenta
             await usuarioService.Eliminar(usuarioId);
             await jsRuntime.InvokeVoidAsync("localStorage.removeItem", "UsuarioId");
-            navManager.NavigateTo("/login"); // Redirige a la página de inicio de sesión
+            navManager.NavigateTo("/login", forceLoad: true);
         }
         else
         {
-            mensaje = "Error";
+            
         }
     }
 
@@ -157,8 +157,9 @@
         }
         else
         {
-            mensaje = "Error";
             return false; // Credenciales incorrectas
         }
     }
+
+
 }

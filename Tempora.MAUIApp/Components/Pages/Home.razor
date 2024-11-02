@@ -61,9 +61,11 @@
                         </div>
                         <div>
                             <p style="text-align:end;" class="parr">
-                                @(periodo.HorasPendientes.Contains(" ") ? periodo.HorasPendientes : $"{periodo.HorasPendientes} horas y 0 minutos restantes")
+                                @(periodo.EstadoId == 1 ? "0 horas y 0 minutos restantes" :
+                                    (periodo.HorasPendientes.Contains(" ") ? periodo.HorasPendientes : $"{periodo.HorasPendientes} horas y 0 minutos restantes"))
                             </p>
                             <progress value="@(periodo.EstadoId == 1 ? 100 : CalcularProgreso(periodo.HorasRealizadas))" max="100"></progress>
+
                         </div>
                     </div>
                 </section>
@@ -71,7 +73,7 @@
         }
         else
         {
-            <p>No hay periodos registrados.</p>
+            <p style="width:100%;" class="center" >No hay periodos registrados.</p>
         }
     </section>
 

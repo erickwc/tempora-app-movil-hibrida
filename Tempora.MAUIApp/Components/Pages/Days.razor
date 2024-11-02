@@ -1,12 +1,13 @@
 ﻿@page "/days/{periodoId:int}"
 @inject NavigationManager navManager
 @inject DiaService diaService
+@inject PeriodoService periodoService
 
 <main style="gap:24px; display:flex; flex-direction:column; height:100vh;">
     <section class="mt-4" style="gap:16px; display:flex; align-items:center;">
         <button @onclick="Home" class="btn-goback"> <img src="/Images/back.svg" alt="Alternate Text" /> </button>
         <div>
-            <h1 class="t20">Servicio social ESFE</h1>
+            <h1 class="t20">@periodo.Nombre</h1>
             <p class="parr">Control de tus horas</p>
         </div>
     </section>
@@ -20,7 +21,7 @@
 
     <section class="d-flex justify-content-between">
         <h2 class="t20">Días</h2>
-        <p class="parr" style="font-size:14px;">2 dias registrados - 13:30 horas</p>
+        <p class="parr" style="font-size:14px;">@sumahoras</p>
     </section>
     <section class="d-grid" style="gap:16px; padding-bottom:100px; z-index:2; position: relative;">
 
@@ -71,10 +72,14 @@
     public int periodoId { get; set; }
     private DateTime? fechaSeleccionada;
     private List<Dia> dia = new List<Dia>();
+    Periodo periodo = new Periodo();
+    string sumahoras = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         dia = await diaService.BuscarPorPeriodoId(periodoId);
+        periodo = await periodoService.ObtenerPorId(periodoId);
+        sumahoras = await diaService.SumarHorasTotalesPorPeriodo(periodoId);
     }
 
     private void Home()
@@ -104,7 +109,6 @@
                 // Busca días por la fecha seleccionada y el ID del período
                 dia = await diaService.BuscarPorFechaYPeriodo(fechaSeleccionada.Value, periodoId);
 
-                // Verifica si no se encontraron días
                 if (dia == null || !dia.Any())
                 {
                     dia = new List<Dia>(); // Inicializa una lista vacía para evitar excepciones en la vista
@@ -112,10 +116,6 @@
             }
             catch (Exception ex)
             {
-                // Manejo de errores: puedes loguear el error aquí si es necesario
-                // _logger.LogError(ex, "Error al buscar días por fecha.");
-
-                // Muestra un mensaje de error al usuario si es necesario
                 dia = new List<Dia>(); // Asegúrate de que `dia` siempre sea una lista
             }
         }

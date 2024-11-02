@@ -24,6 +24,7 @@
                             <img class="ico-inp left" src="/Images/add.svg" alt="Alternate Text" />
                             <input type="text" placeholder="Ingresa el nombre" class="inp parr" @bind="@periodo.Nombre" />
                         </div>
+                        
                     </div>
 
                     <div class="grid" style="gap:10px;">
@@ -32,14 +33,16 @@
                             <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
                             <input type="number" placeholder="Ingresa la cantidad de horas" class="inp parr" @bind="@periodo.CantidadHoras" />
                         </div>
+                         
                     </div>
 
                     <div class="grid" style="gap:10px;">
                         <label>Fecha de inicio</label>
                         <div class="inp-cont">
                             <img class="ico-inp left" src="/Images/date.svg" alt="Alternate Text" />
-                            <input type="date" class="inp parr" @bind="@periodo.FechaRegistro" />
+                            <input type="date" class="inp parr" @bind="@periodo.FechaRegistro"/>
                         </div>
+                        
                     </div>
 
                     <div class="d-none">
@@ -84,17 +87,28 @@
                     </div>
                     </div>
                     
-                    <div class="grid" style="gap:10px;">
+                    <div class="grid" style="gap:10px; width:100%;">
                         <label>Hora de registro</label>
                         <div class="inp-cont">
                             <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
-                            <input type="datetime" placeholder="Ingresa las horas pendientes" class="inp parr" @bind="@periodo.HoraRegistro" />
+                            <input placeholder="Ingresa la hora" class="inp parr" type="time"
+                                   value="@periodo.HoraRegistro.ToString(@"hh\:mm")"
+                                   @onchange="(e) => { periodo.HoraRegistro = TimeSpan.Parse(e.Value.ToString());}" />
                         </div>
+                        
                     </div>
+
+               
+
                 </section>
                 </section>
             </section>
         </section>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="error">@errorMessage</div>
+    }
 
     <button @onclick="EditarPeriodo" class="bton bton-black" style="margin-bottom:24px;" type="submit">Guardar cambios</button>
     </main>
@@ -120,6 +134,9 @@
         navManager.NavigateTo("/home");
     }
 
+    private string errorMessage;
+
+
     private Periodo periodo = new Periodo(); 
 
     [Parameter]
@@ -138,7 +155,27 @@
 
     private async Task EditarPeriodo()
     {
+         if (!ValidarCampos())
+        {
+            return; // Si hay un error, se detiene la ejecución
+        }
+
         await periodoService.Editar(periodo); // Llama al método Editar para actualizar el periodo
         navManager.NavigateTo("/home"); // Navega a la página de inicio después de guardar
+    }
+
+    private bool ValidarCampos()
+    {
+        // Si algún campo no es válido, asigna el mensaje de error y devuelve falso
+        if (string.IsNullOrWhiteSpace(periodo.Nombre) ||
+            periodo.CantidadHoras <= 0 ||
+            periodo.FechaRegistro == default ||
+            periodo.HoraRegistro == default)
+        {
+            errorMessage = "Ups, tienes campos vacíos. Completa todos los campos para guardar cambios.";
+            return false;
+        }
+
+        return true; // Todos los campos son válidos
     }
 }

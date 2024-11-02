@@ -3,21 +3,16 @@
 @inject DiaService diaService
 
 <main style="gap:24px; display:flex; flex-direction:column; justify-content:space-between; height:100vh;">
-
     <section class="d-grid" style="gap:48px;">
         <section class="mt-4" style="gap:24px; display:flex; align-items:center; justify-content:space-between;">
             <button @onclick="Regresar" class="btn-goback"> <img src="/Images/back.svg" alt="Alternate Text" /> </button>
             <div>
                 <h1 class="t20">Editar</h1>
-               @*  <p class="parr">Edita tus horas</p> *@
             </div>
             <button data-bs-toggle="modal" data-bs-target="#staticBackdrop2" class="btn-goback"> <img src="/Images/delete.svg" alt="Alternate Text" /> </button>
-
         </section>
 
-
         <section class="d-grid" style="gap:48px;">
-
             <div class="d-grid" style="gap:24px;">
                 <section class="grid">
                     <h1 class="t16">Fecha de actividad</h1>
@@ -32,9 +27,7 @@
                     </div>
                 </section>
             </div>
-
             <div class="d-grid" style="gap:24px;">
-
                 <section class="d-flex justify-content-between align-items-center">
                     <section class="grid">
                         <h1 class="t16">Turno de la mañana</h1>
@@ -47,10 +40,9 @@
                         <label>Hora de inicio</label>
                         <div class="inp-cont">
                             <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
-                            <input placeholder="Ingresa la hora" class="inp parr" type="time"
-                                   value="@dia.HoraInicioManana?.ToString(@"hh\:mm")"
+                            <input placeholder="--:--" class="inp parr" type="time"
+                                   value="@(dia.HoraInicioManana?.ToString(@"hh\:mm") ?? "--:--")"
                                    @onchange="(e) => { dia.HoraInicioManana = TimeSpan.Parse(e.Value.ToString()); CalcularHorasTotales(); }" />
-
                         </div>
                     </div>
 
@@ -58,10 +50,9 @@
                         <label>Hora de finalización</label>
                         <div class="inp-cont">
                             <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
-                            <input placeholder="Ingresa la hora" class="inp parr" type="time"
-                                   value="@dia.HoraFinManana?.ToString(@"hh\:mm")"
+                            <input placeholder="--:--" class="inp parr" type="time"
+                                   value="@(dia.HoraFinManana?.ToString(@"hh\:mm") ?? "--:--")"
                                    @onchange="(e) => { dia.HoraFinManana = TimeSpan.Parse(e.Value.ToString()); CalcularHorasTotales(); }" />
-
                         </div>
                     </div>
                 </section>
@@ -73,15 +64,13 @@
                 </section>
 
                 <section class="d-grid" style="gap:24px; grid-template-columns:1fr 1fr;">
-
                     <div class="grid" style="gap:10px; width:100%;">
                         <label>Hora de inicio</label>
                         <div class="inp-cont">
                             <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
-                            <input placeholder="Ingresa la hora" class="inp parr" type="time"
-                                   value="@dia.HoraInicioTarde?.ToString(@"hh\:mm")"
+                            <input placeholder="--:--" class="inp parr" type="time"
+                                   value="@(dia.HoraInicioTarde?.ToString(@"hh\:mm") ?? "--:--")"
                                    @onchange="(e) => { dia.HoraInicioTarde = TimeSpan.Parse(e.Value.ToString()); CalcularHorasTotales(); }" />
-
                         </div>
                     </div>
 
@@ -89,22 +78,12 @@
                         <label>Hora de finalización</label>
                         <div class="inp-cont">
                             <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
-                            <input placeholder="Ingresa la hora" class="inp parr" type="time"
-       value="@dia.HoraFinTarde?.ToString(@"hh\:mm")"
-       @onchange="(e) => { dia.HoraFinTarde = TimeSpan.Parse(e.Value.ToString()); CalcularHorasTotales(); }" />
+                            <input placeholder="--:--" class="inp parr" type="time"
+                                   value="@(dia.HoraFinTarde?.ToString(@"hh\:mm") ?? "--:--")"
+                                   @onchange="(e) => { dia.HoraFinTarde = TimeSpan.Parse(e.Value.ToString()); CalcularHorasTotales(); }" />
                         </div>
                     </div>
-
                 </section>
-            </div>
-            
-
-            <div class="grid d-none" style="gap:10px; width:100%;">
-                <label>Hora de finalización</label>
-                <div class="inp-cont">
-                    <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
-                    <input placeholder="Ingresa la hora" class="inp parr" type="text" @bind="@dia.PeriodoId" />
-                </div>
             </div>
 
             <div class="grid" style="gap:10px; width:100%;">
@@ -114,16 +93,16 @@
                     <input placeholder="Total de horas" class="inp parr" type="text" value="@dia.HorasTotales" readonly />
                 </div>
             </div>
-
-
-
         </section>
     </section>
 
-    <button @onclick="EditarDia" class="bton bton-black" style="margin-bottom:24px;" type="submit">Guardar nuevo día</button>
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="error">@errorMessage</div>
+    }
 
+    <button @onclick="EditarDia" class="bton bton-black" style="margin-bottom:24px;" type="submit">Guardar cambios</button>
 </main>
-
 
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -147,7 +126,7 @@
                 <p class="parr center">Si eliminas este día, toda la información relacionada se perderá para siempre.</p>
             </div>
             <div class="d-grid" style="gap:8px;">
-                <button data-bs-dismiss="modal" aria-label="Close" @onclick="EliminarDia"class="bton bton-black">Si, quiero eliminar este día</button>
+                <button data-bs-dismiss="modal" aria-label="Close" @onclick="EliminarDia" class="bton bton-black">Si, quiero eliminar este día</button>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close" class="bton bton-white">Cancelar</button>
             </div>
         </div>
@@ -155,12 +134,8 @@
 </div>
 
 @code {
-    private void Regresar()
-    {
-        navManager.NavigateTo($"/days/{dia.PeriodoId}");
-    }
-
     private Dia dia = new Dia();
+    private string errorMessage; 
 
     [Parameter]
     public long diaId { get; set; }
@@ -168,6 +143,18 @@
     protected override async Task OnInitializedAsync()
     {
         dia = await diaService.ObtenerPorId(diaId);
+
+        // Verificar y asignar null a las horas que están en "00:00:00"
+        if (dia.HoraInicioManana == TimeSpan.Zero && dia.HoraFinManana == TimeSpan.Zero)
+        {
+            dia.HoraInicioManana = null;
+            dia.HoraFinManana = null;
+        }
+        if (dia.HoraInicioTarde == TimeSpan.Zero && dia.HoraFinTarde == TimeSpan.Zero)
+        {
+            dia.HoraInicioTarde = null;
+            dia.HoraFinTarde = null;
+        }
     }
 
     private async Task EliminarDia()
@@ -178,22 +165,11 @@
 
     private async Task EditarDia()
     {
-        // Asegúrate de que las horas sean '00:00:00' si están vacías
-        if (dia.HoraInicioManana == null)
+        errorMessage = string.Empty; 
+
+        if (!ValidarCampos())
         {
-            dia.HoraInicioManana = TimeSpan.Zero;
-        }
-        if (dia.HoraFinManana == null)
-        {
-            dia.HoraFinManana = TimeSpan.Zero;
-        }
-        if (dia.HoraInicioTarde == null)
-        {
-            dia.HoraInicioTarde = TimeSpan.Zero;
-        }
-        if (dia.HoraFinTarde == null)
-        {
-            dia.HoraFinTarde = TimeSpan.Zero;
+            return; 
         }
 
         await diaService.Editar(dia);
@@ -212,5 +188,31 @@
 
         dia.HorasTotales = totalHoras.ToString(@"h\:mm"); // Formato "h:mm"
     }
-}
 
+    private void Regresar()
+    {
+        navManager.NavigateTo($"/days/{dia.PeriodoId}");
+    }
+
+    private bool ValidarCampos()
+    {
+        // Validar que al menos un turno tenga horas
+        bool tieneTurnoManana = dia.HoraInicioManana.HasValue || dia.HoraFinManana.HasValue;
+        bool tieneTurnoTarde = dia.HoraInicioTarde.HasValue || dia.HoraFinTarde.HasValue;
+
+        if (!tieneTurnoManana && !tieneTurnoTarde)
+        {
+            errorMessage = "Debes ingresar horas en al menos un turno (mañana o tarde).";
+            return false;
+        }
+
+        // Validar que la fecha no sea la por defecto
+        if (dia.Fecha == default)
+        {
+            errorMessage = "La fecha no puede estar vacía. Por favor, selecciona una fecha válida.";
+            return false;
+        }
+
+        return true; // Todos los campos son válidos
+    }
+}
