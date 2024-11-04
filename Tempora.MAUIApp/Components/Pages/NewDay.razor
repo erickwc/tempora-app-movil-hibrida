@@ -2,7 +2,7 @@
 @inject NavigationManager navManager
 @inject DiaService diaService
 
-<main style="gap:24px; display:flex; flex-direction:column; justify-content:space-between; height:100vh;">
+<main style="gap:24px;  padding-bottom:56px; margin-bottom:24px; display:flex; flex-direction:column; justify-content:space-between; height:110vh;">
 
     <section class="d-grid" style="gap:48px;">
         <section class="mt-4" style="gap:24px; display:flex; align-items:center;">
@@ -17,13 +17,11 @@
         <section class="d-grid" style="gap:48px;">
             
             <div class="d-grid" style="gap:24px;">
-                <section class="grid">
-                    <h1 class="t16">Fecha de actividad</h1>
-                </section>
-
                 <section class="grid" style="gap:24px;">
                     <div class="grid" style="gap:10px;"> 
-                        <label>Fecha de Actividad</label>
+                        <section class="grid">
+                            <h1 class="t16">Fecha de actividad</h1>
+                        </section>
                         <div class="inp-cont" style="display: flex; align-items: center;">
                             <img class="ico-inp left" src="/Images/date.svg" alt="Alternate Text" />
                             <input type="date" class="inp parr" @bind="dia.Fecha" />
@@ -102,15 +100,21 @@
                 </section>
             </div>
 
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="error">@errorMessage</div>
+            }
 
-            <div class="grid" style="gap:10px; width:100%;">
-                <label>Total de horas</label>
+            <div class="d-flex align-items-center" style="gap:10px; width:100%;">
+                <section class="grid">
+                    <h1 style="width:150px;" class="t16">Horas acumuladas: </h1>
+                </section>
                 <div class="inp-cont">
-                    <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
-                    <input placeholder="" class="inp parr" value="@dia.HorasTotales" readonly />
+                    <input placeholder="0" class="inp parr" style="background:white; border:none; padding-left:0px;" value="@dia.HorasTotales" readonly />
                 </div>
             </div>
 
+          
 
             <div class="grid d-none" style="gap:10px; width:100%; pointer-events:none;">
                 <label>Id Periodo</label>
@@ -120,17 +124,14 @@
                            value="@dia.PeriodoId" @onchange="(e) => dia.PeriodoId = int.Parse(e.Value.ToString())" />
                 </div>
             </div>
-
+            
 
         </section>
     </section>
 
-    @if (!string.IsNullOrEmpty(errorMessage))
-    {
-        <div class="error">@errorMessage</div>
-    }
-
-    <button @onclick="Guardar" class="bton bton-black" style="margin-bottom:24px; margin-top:48px;">Guardar nuevo día</button>
+    
+     
+    <button @onclick="Guardar" class="bton bton-black" style="z-index:3; position: fixed; bottom: 24px; left: 24px; right: 24px; width: calc(100% - 48px);" >Guardar nuevo día</button>
 
 </main>
 
@@ -202,8 +203,7 @@
     protected override void OnInitialized()
     {
         dia.PeriodoId = periodoId;
-        // Inicializa la fecha con una fecha válida, por ejemplo, hoy
-        dia.Fecha = DateTime.Today;
+        
     }
 
     private void Regresar()
@@ -224,8 +224,5 @@
         dia.HorasTotales = totalHoras.ToString(@"h\:mm");
     }
 
-    private void SetTodayDate()
-    {
-        dia.Fecha = DateTime.Today;
-    }
+    
 }

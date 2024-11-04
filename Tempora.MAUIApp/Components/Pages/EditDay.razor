@@ -86,13 +86,15 @@
                 </section>
             </div>
 
-            <div class="grid" style="gap:10px; width:100%;">
-                <label>Hora de finalización</label>
+            <div class="d-flex align-items-center" style="gap:10px; width:100%;">
+                <section class="grid">
+                    <h1 style="width:150px;" class="t16">Horas acumuladas: </h1>
+                </section>
                 <div class="inp-cont">
-                    <img class="ico-inp left" src="/Images/hours.svg" alt="Alternate Text" />
-                    <input placeholder="Total de horas" class="inp parr" type="text" value="@dia.HorasTotales" readonly />
+                    <input placeholder="Total de horas"  class="inp parr" style="background:white; border:none; padding-left:0px;" type="text" value="@dia.HorasTotales" readonly />
                 </div>
             </div>
+            
         </section>
     </section>
 
@@ -174,6 +176,11 @@
 
         await diaService.Editar(dia);
         Regresar();
+
+        dia.HoraInicioManana ??= TimeSpan.Zero;
+        dia.HoraFinManana ??= TimeSpan.Zero;
+        dia.HoraInicioTarde ??= TimeSpan.Zero;
+        dia.HoraFinTarde ??= TimeSpan.Zero;
     }
 
     private void CalcularHorasTotales()

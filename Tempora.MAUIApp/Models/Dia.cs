@@ -16,7 +16,7 @@ namespace Tempora.MAUIApp.Models
         public int PeriodoId { get; set; }
 
         [Required]
-        public DateTime Fecha { get; set; }
+        public DateTime? Fecha { get; set; }
 
         public TimeSpan? HoraInicioManana { get; set; }
 

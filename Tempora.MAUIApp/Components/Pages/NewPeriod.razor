@@ -24,10 +24,7 @@
                 <img class="ico-inp left" src="/Images/add.svg" alt="Alternate Text" />
                 <input type="text" placeholder="Ingresa el nombre" class="inp parr" @onchange="(e) => periodo.Nombre = e.Value.ToString()" />
             </div>
-            @if (!string.IsNullOrEmpty(errorMessage))
-            {
-                <div class="error">@errorMessage</div>
-            }
+            
         </div>
 
       
@@ -43,10 +40,7 @@
                    periodo.HorasPendientes = e.Value.ToString(); 
                }" />
             </div>
-              @if (!string.IsNullOrEmpty(errorMessage))
-        {
-            <div class="error">@errorMessage</div>
-        }
+             
         </div>
 
       
@@ -57,10 +51,7 @@
                 <img class="ico-inp left" src="/Images/date.svg" alt="Alternate Text" />
                 <input type="date" class="inp parr" @onchange="(e) => periodo.FechaRegistro = DateTime.Parse(e.Value.ToString())" />
             </div>
-            @if (!string.IsNullOrEmpty(errorMessage))
-            {
-                <div class="error">@errorMessage</div>
-            }
+            
         </div>
         <div class="grid d-none" style="gap:10px;">
             <label>Id Estado</label>
@@ -94,16 +85,18 @@
                        @onchange="(e) => periodo.HorasPendientes = e.Value.ToString()"
                        value="@periodo.HorasPendientes" />
             </div>
-            @if (!string.IsNullOrEmpty(errorMessage))
-            {
-                <div class="error">@errorMessage</div>
-            }
+           
 
         </div>
-
         
-        <button @onclick="Guardar" class="bton bton-black">Guardar nuevo periodo</button>
     </section>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="error">@errorMessage</div>
+    }
+
+    <button @onclick="Guardar" style="z-index:3; position: fixed; bottom: 24px; left: 24px; right: 24px; width: calc(100% - 48px);" class="bton bton-black">Guardar nuevo periodo</button>
 </main>
 
 @code {
