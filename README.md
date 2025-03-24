@@ -17,13 +17,13 @@
 
 ## Características Principales:
 
-- Gestión Eficiente de Periodos de Tiempo: Agrega, organiza y controla tus periodos de trabajo o proyectos de forma rápida y sencilla.
+- **Gestión Eficiente de Periodos de Tiempo:** Agrega, organiza y controla tus periodos de trabajo o proyectos de forma rápida y sencilla.
 
-- Personalización de Días: Asigna días específicos dentro de cada periodo y haz un seguimiento detallado de tu progreso.
+- **Personalización de Días:** Asigna días específicos dentro de cada periodo y haz un seguimiento detallado de tu progreso.
 
-- Cálculo Automático de Horas: Tempora calcula las horas trabajadas cada día y las totales automáticamente, ahorrándote tiempo y esfuerzo.
+- **Cálculo Automático de Horas:** Tempora calcula las horas trabajadas cada día y las totales automáticamente, ahorrándote tiempo y esfuerzo.
 
-- Administración de Perfil Personal: Puedes consultar rápidamente tu historial de actividades.
+- **Administración de Perfil Personal:** Puedes consultar rápidamente tu historial de actividades.
 
 - Con Tempora, tendrás una herramienta poderosa para gestionar tu tiempo de manera eficiente y precisa, sin complicaciones.
 
