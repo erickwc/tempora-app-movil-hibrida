@@ -25,7 +25,7 @@
 
 - **Administración de Perfil Personal:** Puedes consultar rápidamente tu historial de actividades.
 
-- Con Tempora, tendrás una herramienta poderosa para gestionar tu tiempo de manera eficiente y precisa, sin complicaciones.
+Con Tempora, tendrás una herramienta poderosa para gestionar tu tiempo de manera eficiente y precisa, sin complicaciones.
 
 ## Imagenes de prototipos
 ![812shots_so](https://github.com/user-attachments/assets/111e9c13-38e6-4c57-b4b9-43384bf97983)
