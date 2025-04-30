@@ -1,6 +1,3 @@
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/429a3400-fa92-40d4-8992-fec2be21d17d" width="100" height="auto"/>
-</p>
 
 
 ## Tempora - La App Móvil Híbrida para Gestionar Tu Tiempo de Forma Automática
@@ -17,18 +14,30 @@
 
 ## Características Principales:
 
-- **Gestión Eficiente de Periodos de Tiempo:** Agrega, organiza y controla tus periodos de trabajo o proyectos de forma rápida y sencilla.
+- 🕧 **Gestión Eficiente de Periodos de Tiempo:** Agrega, organiza y controla tus periodos laborales de forma eficaz. Visualiza las horas trabajadas y las restantes mediante una barra de progreso, con cambio automático de estado del periodo entre "Pendiente" y "Finalizado".
 
-- **Personalización de Días:** Asigna días específicos dentro de cada periodo y haz un seguimiento detallado de tu progreso.
+- 📂 **Personalización de Días:** Guarda días específicos dentro de cada periodo para llevar un seguimiento detallado del progreso.
 
-- **Cálculo Automático de Horas:** Tempora calcula las horas trabajadas cada día y las totales automáticamente, ahorrándote tiempo y esfuerzo.
+- ➕ **Cálculo Automático de Horas:**  Calcula automáticamente las horas trabajadas por día y el total acumulado, ahorrando tiempo y esfuerzo.
 
-- **Administración de Perfil Personal:** Puedes consultar rápidamente tu historial de actividades.
+- 👨 **Administración de Perfil Personal:** Consulta de forma rápida tu historial de horas totales acumuladas y cantidad de periodos.
 
-Con Tempora, tendrás una herramienta poderosa para gestionar tu tiempo de manera eficiente y precisa, sin complicaciones.
 
 ## Imagenes de prototipos
-![812shots_so](https://github.com/user-attachments/assets/111e9c13-38e6-4c57-b4b9-43384bf97983)
 
+### Bienvenida
+![Frame 119(1)](https://github.com/user-attachments/assets/c7495d80-1c51-4cbf-b7cf-699c3c0d436f)
+
+### Perfil
+![Frame 120(1)](https://github.com/user-attachments/assets/aead0c59-a109-4f7e-b80e-9418c5901577)
+
+### Cerrar Sesion y Eliminacion de la cuenta
+![Frame 121](https://github.com/user-attachments/assets/5bc32e70-2c66-4daf-a676-115a36eac0ad)
+
+### Gestion de periodos
+![Frame 122](https://github.com/user-attachments/assets/e11aeb72-a9b5-4bbe-8583-aaf86c66b4ed)
+
+### Gestion de Fechas
+![Frame 123](https://github.com/user-attachments/assets/eaa40502-7339-4a2b-8069-631b33696d04)
 
 
